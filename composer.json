@@ -1,0 +1,32 @@
+{
+    "name": "unmous/handbook-site",
+    "type": "project",
+    "authors": [],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "digraphcms/digraph-core": "^2",
+        "unmous/ous_digraph_module": "^2",
+        "caxy/php-htmldiff": "^0.1.10"
+    },
+    "repositories": [{
+        "type": "vcs",
+        "url": "https://github.com/UNM-OUS/ous_digraph_module.git"
+    }],
+    "config": {
+        "platform": {
+            "php": "7.4.15"
+        }
+    },
+    "scripts": {
+        "migrate": [
+            "phinx migrate"
+        ],
+        "seed": [
+            "phinx seed:run"
+        ],
+        "server": [
+            "php -S localhost:8000 -t web web/index.php"
+        ]
+    }
+}

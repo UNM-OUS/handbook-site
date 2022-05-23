@@ -1,0 +1,31 @@
+fields:
+  site:
+    name: Faculty Handbook
+
+# Should be disabled in favor of actual cron jobs for non-sandbox sites
+cron:
+  route_enabled: false
+  poor_mans_cron: false
+
+# Should only be disabled for sites that require general signins, like for signups
+unm:
+  block_unknown_netids: null
+usermenu:
+  guest_signin: false
+
+# Generally should be fine for most sites
+theme:
+  bundle_css: true
+  bundle_js: true
+  head_cache_ttl: 86400
+errors:
+  display_trace: false
+cache:
+  path: "${paths.base}/cache"
+  ttl: 300
+files:
+  ttl: 604800
+  css:
+    minify: true
+    sourcemap: false
+    keepimportantcomments: true

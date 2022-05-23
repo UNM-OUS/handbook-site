@@ -1,0 +1,101 @@
+name: Deploy to production
+on:
+  push:
+    branches: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      - uses: actions/checkout@v2
+      - uses: php-actions/composer@v6
+        with:
+          version: 2
+          php_version: 7.4
+          php_extensions: zip gd
+          args: --no-dev --ignore-platform-reqs --classmap-authoritative --apcu-autoloader
+          ssh_key: ${{ secrets.SSH_KEY }}
+          ssh_key_pub: ${{ secrets.SSH_KEY_PUB }}
+      - name: Enter maintenance mode
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: touch ${{ secrets.REMOTE_PATH }}/prod/.maintenance
+      - name: Back up production database
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}/prod
+            [ -f scripts/db-backup.php ] && /usr/local/bin/ea-php74 -f scripts/db-backup.php || echo "Backup script not deployed yet"
+      - name: Back up production storage
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}
+            zip -ruq ../_backup/${PWD##*/}/`date +%Y%m%d_%H%M%S`.zip prod/storage
+      - name: Clear cache
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}/prod
+            rm -rf cache/*
+      - name: Clear all CSS/JS files and old files/cache
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}/prod
+            find web/files -name '*.css' -delete
+            find web/files -name '*.js' -delete
+            find web/files -mtime +365 -delete
+            find web/files -type d -empty -delete
+      - name: Deploy
+        uses: easingthemes/ssh-deploy@main
+        env:
+          ARGS: -crlpEtzi --delete
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_PATH }}/prod
+          EXCLUDE: /.maintenance, /.htaccess, /env.yaml, /.git/, /.github/, /storage/, /web/files/
+      - name: Database migrations
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}/prod
+            /usr/local/bin/ea-php74 vendor/bin/phinx migrate --dry-run
+            /usr/local/bin/ea-php74 vendor/bin/phinx migrate
+      - name: Leave maintenance mode
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: rm ${{ secrets.REMOTE_PATH }}/prod/.maintenance

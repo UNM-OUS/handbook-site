@@ -1,0 +1,91 @@
+name: Deploy to test
+on:
+  push:
+    branches-ignore: [main]
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: test
+    steps:
+      - uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+      - uses: actions/checkout@v2
+      - uses: php-actions/composer@v6
+        with:
+          version: 2
+          php_version: 7.4
+          php_extensions: zip gd
+          args: --no-dev --ignore-platform-reqs --optimize-autoloader --apcu-autoloader
+          ssh_key: ${{ secrets.SSH_KEY }}
+          ssh_key_pub: ${{ secrets.SSH_KEY_PUB }}
+      - name: Enter maintenance mode
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: touch ${{ secrets.REMOTE_PATH }}/test/.maintenance
+      - name: Clear cache and files
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}/test
+            rm -rf cache/*
+            rm -rf web/files/*
+      - name: Deploy
+        uses: easingthemes/ssh-deploy@main
+        env:
+          ARGS: -crlpEtzi --delete
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_PATH }}/test
+          EXCLUDE: /.maintenance, /.htaccess, /env.yaml, /.git/, /.github/, /storage/
+      - name: Copy production database
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}/prod
+            [ -f scripts/db-backup.php ] && /usr/local/bin/ea-php74 -f scripts/db-backup.php || echo "Backup script not deployed yet"
+            cd ${{ secrets.REMOTE_PATH }}/test
+            [ -f scripts/db-preptest.php ] && /usr/local/bin/ea-php74 -f scripts/db-preptest.php || echo "Test DB preparation script not deployed yet"
+      - name: Copy production storage
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}
+            rsync -crlpEtzi --delete prod/storage/ test/storage
+      - name: Database migrations
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}/test
+            /usr/local/bin/ea-php74 vendor/bin/phinx migrate --dry-run
+            /usr/local/bin/ea-php74 vendor/bin/phinx migrate
+      - name: Leave maintenance mode
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          key: ${{ secrets.SSH_KEY}}
+          script_stop: true
+          script: rm ${{ secrets.REMOTE_PATH }}/test/.maintenance

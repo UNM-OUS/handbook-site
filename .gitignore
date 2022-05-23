@@ -1,0 +1,15 @@
+/vendor
+
+/web/files/*
+!/web/files/.htaccess
+!/web/files/README.md
+
+/cache/*
+!/cache/README.md
+
+/storage/*
+!/storage/README.md
+
+/env.yaml
+
+/.maintenance
