@@ -27,7 +27,9 @@ jobs:
           username: ${{ secrets.REMOTE_USER }}
           key: ${{ secrets.SSH_KEY}}
           script_stop: true
-          script: touch ${{ secrets.REMOTE_PATH }}/prod/.maintenance
+          script: |
+            cd ${{ secrets.REMOTE_PATH }}/prod
+            .maintenance
       - name: Back up production database
         uses: appleboy/ssh-action@master
         with:
