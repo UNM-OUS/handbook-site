@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c217cce9e3c331d78b239fb89043d899",
+    "content-hash": "a34fd71ff282fb38acab28bd03e9ded6",
     "packages": [
         {
             "name": "byjoby/flatrr",
