@@ -62,7 +62,7 @@ class Policies extends AbstractPlugin
             $url = 'https://policy.unm.edu/regents-policies/foreword.html';
             $name = "RPM Foreword";
         }
-        return (new A($url, '_blank'))
+        return (new A($url))
             ->addChild($s->getContent() ?? $name)
             ->setAttribute('title', $name);
         return null;
@@ -87,7 +87,7 @@ class Policies extends AbstractPlugin
             );
             $name = "UAP Policy $number";
         }
-        if ($url) return (new A($url, '_blank'))
+        if ($url) return (new A($url))
             ->addChild($s->getContent() ?? $name)
             ->setAttribute('title', $name);
         else return null;

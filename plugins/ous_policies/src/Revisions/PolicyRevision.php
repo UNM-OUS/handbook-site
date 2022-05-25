@@ -37,7 +37,7 @@ class PolicyRevision extends FlatArray
         'minor' => 'Minor/maintenance revision',
         'abolished' => 'Policy abolished',
         'created' => 'New policy',
-        'firstweb' => 'First version available online'
+        'firstweb' => 'First tracked online version'
     ];
 
     public function __construct(
@@ -301,7 +301,7 @@ class PolicyRevision extends FlatArray
     public function title($allowNull = false): ?string
     {
         if ($allowNull) return $this->title;
-        else return $this->title ?? @static::DEFAULT_NAMES[$this->type] ?? 'Change: ' . ucfirst($this->type);
+        else return $this->title ?? @static::DEFAULT_NAMES[$this->type] ?? 'Changed: ' . ucfirst($this->type);
     }
 
     public function policyUUID(): string

@@ -23,7 +23,7 @@ if ($revision->state() == 'hidden') Permissions::requireMetaGroup('policies__edi
 
 // fix up breadcrumb
 Breadcrumb::top($revision->url());
-Breadcrumb::parent(new URL('revision_history.html'));
+Breadcrumb::parent(new URL('_revision_history.html'));
 ActionMenu::addContextAction(new URL("_edit_revision.html?uuid=$uuid"));
 ActionMenu::addContextAction(new URL("_delete_revision.html?uuid=$uuid"));
 
