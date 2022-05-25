@@ -207,7 +207,7 @@ class PolicyPage extends AbstractPage
     public function permissions(URL $url, ?User $user = null): ?bool
     {
         if ($url->action() == 'copy') return false;
-        if ($url->action() == 'revision_history') return true;
+        if ($url->action() == '_revision_history') return true;
         if ($url->actionPrefix() == 'polrev') return true;
         return parent::permissions($url, $user);
     }
