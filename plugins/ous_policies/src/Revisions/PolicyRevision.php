@@ -32,8 +32,16 @@ class PolicyRevision extends FlatArray
     protected $updated;
     protected $updated_by;
 
+    const DEFAULT_NAMES = [
+        'normal' => 'Policy updated',
+        'minor' => 'Minor/maintenance revision',
+        'abolished' => 'Policy abolished',
+        'created' => 'New policy',
+        'firstweb' => 'First version available online'
+    ];
+
     public function __construct(
-        string $title,
+        ?string $title,
         string $page_uuid,
         ?string $num,
         string $name,
@@ -285,9 +293,15 @@ class PolicyRevision extends FlatArray
         return $this->page_uuid;
     }
 
-    public function title(): string
+    /**
+     * The metadata title of this revision
+     *
+     * @return string|null
+     */
+    public function title($allowNull = false): ?string
     {
-        return $this->title;
+        if ($allowNull) return $this->title;
+        else return $this->title ?? @static::DEFAULT_NAMES[$this->type] ?? 'Change: ' . ucfirst($this->type);
     }
 
     public function policyUUID(): string
@@ -305,6 +319,11 @@ class PolicyRevision extends FlatArray
         return $this->num;
     }
 
+    /**
+     * The policy name to be used for this revision
+     *
+     * @return string
+     */
     public function name(): string
     {
         return $this->name;

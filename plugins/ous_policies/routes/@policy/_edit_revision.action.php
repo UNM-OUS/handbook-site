@@ -52,9 +52,9 @@ $effective = (new DateField('Effective date'))
 $metadata->addChild($effective);
 
 $title = (new Field('Revision title'))
-    ->setDefault($revision->title())
+    ->setDefault($revision->title(true))
     ->addTip('Title to be used when referring to this revision on the revision logs or public comment systems')
-    ->setRequired(true);
+    ->addTip('Should be left blank unless a special name is needed for some reason, so that standard names can be used and automatically updated');
 $metadata->addChild($title);
 
 $notes = (new RichContentField('Revision notes', Context::arg('uuid') . '_notes'))

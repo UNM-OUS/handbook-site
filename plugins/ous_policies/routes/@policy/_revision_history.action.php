@@ -1,4 +1,3 @@
-<h1>Revision history</h1>
 <?php
 
 use DigraphCMS\Context;
@@ -11,6 +10,8 @@ use DigraphCMS_Plugins\unmous\ous_policies\Approvals\RevisionApproval;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 
+printf('<h1>Revision history of %s</h1>', Context::page()->name());
+
 $query = Revisions::select(Context::pageUUID())
     ->publicView()
     ->where('effective IS NOT NULL')
@@ -22,7 +23,6 @@ echo new QueryTable(
         return [
             sprintf('<a href="%s">%s</a>', $revision->url(), $revision->title()),
             Format::date($revision->effective()),
-            $revision->type()->label(),
             implode(PHP_EOL, array_map(
                 function (RevisionApproval $approval): string {
                     return sprintf(
@@ -39,7 +39,6 @@ echo new QueryTable(
     [
         new ColumnHeader('Revision'),
         new QueryColumnHeader('Effective date', 'effective', $query),
-        new ColumnHeader('Type'),
         new ColumnHeader('Approved by'),
         new ColumnHeader('Status')
     ]

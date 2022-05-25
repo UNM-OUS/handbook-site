@@ -7,8 +7,9 @@ class RevisionType
     const TYPES = [
         'normal' => 'Normal revision',
         'minor' => 'Minor/Maintenance revision',
-        'abolished' => 'Abolished',
-        'created' => 'Created'
+        'abolished' => 'Policy is being abolished',
+        'created' => 'New policy created',
+        'firstweb' => 'First web version',
     ];
 
     protected $type;

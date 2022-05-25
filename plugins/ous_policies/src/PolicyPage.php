@@ -7,6 +7,8 @@ use DigraphCMS\Cron\DeferredJob;
 use DigraphCMS\RichContent\RichContent;
 use DigraphCMS\URL\URL;
 use DigraphCMS\Users\User;
+use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPeriods;
+use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentSelect;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\RevisionSelect;
@@ -35,7 +37,14 @@ class PolicyPage extends AbstractPage
         );
     }
 
-    public static function onRecursiveDelete(DeferredJob $job, PolicyPage $page)
+    /**
+     * Need to extend recursive deletion to delete all revisions for a page
+     *
+     * @param DeferredJob $job
+     * @param PolicyPage $page
+     * @return void
+     */
+    public static function onRecursiveDelete(DeferredJob $job, AbstractPage $page)
     {
         $revisions = Revisions::select($page->uuid());
         while ($revision = $revisions->fetch()) {
@@ -198,8 +207,8 @@ class PolicyPage extends AbstractPage
     public function permissions(URL $url, ?User $user = null): ?bool
     {
         if ($url->action() == 'copy') return false;
-        if ($url->action() == 'revision_history') return $this->revisions()->count() > 1;
-        if (substr($url->action(), 0, 7) == 'polrev_') return true;
+        if ($url->action() == 'revision_history') return true;
+        if ($url->actionPrefix() == 'polrev') return true;
         return parent::permissions($url, $user);
     }
 

@@ -11,7 +11,7 @@ class PolicyRevisionTable extends AbstractMigration
             ->addColumn('uuid', 'uuid')
             ->addColumn('page_uuid', 'uuid')
             ->addColumn('num', 'string', ['length' => 20, 'null' => true])
-            ->addColumn('name', 'string', ['length' => 250])
+            ->addColumn('name', 'string', ['length' => 250, 'null' => true])
             ->addColumn('title', 'string', ['length' => 250])
             ->addColumn('effective', 'date', ['null' => true])
             ->addColumn('type', 'string', ['length' => 50])

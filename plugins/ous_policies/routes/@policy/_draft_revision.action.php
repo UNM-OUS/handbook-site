@@ -39,13 +39,8 @@ $form->addChild($effective);
 
 $title = (new Field('Revision title'))
     ->addTip('Title to be used when referring to this revision on the revision logs or public comment systems')
-    ->setRequired(true);
+    ->addTip('Should be left blank unless a special name is needed for some reason, so that standard names can be used and automatically updated');
 $form->addChild($title);
-
-$notes = (new RichContentField('Revision notes', null, true))
-    ->addTip('Notes to be displayed when showing this revision on the revision logs or public comment systems')
-    ->addTip('You will have the option to add files or other rich media in the next step');
-$form->addChild($notes);
 
 // list and handle rich media for cloning/linking
 $clones = [];
@@ -70,7 +65,7 @@ if (!Context::page()->revisions()->count()) {
 }
 
 // handle form
-$form->addCallback(function () use ($clones, $title, $notes, $type, $moved, $effective) {
+$form->addCallback(function () use ($clones, $title, $type, $moved, $effective) {
     $revision = new PolicyRevision(
         $title->value(),
         Context::pageUUID(),
@@ -80,9 +75,7 @@ $form->addCallback(function () use ($clones, $title, $notes, $type, $moved, $eff
         $type->value(),
         $moved->value(),
         'draft',
-        [
-            'notes' => $notes->value()->array()
-        ]
+        []
     );
     // set values from existing revision if specified
     if (Context::arg('from') && $from = Revisions::get(Context::arg('from'), Context::pageUUID())) {
