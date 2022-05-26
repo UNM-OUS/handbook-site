@@ -51,7 +51,7 @@ $effective = (new DateField('Effective date'))
     ->setDefault($revision->effective());
 $metadata->addChild($effective);
 
-$title = (new Field('Revision title'))
+$title = (new Field('Custom revision title'))
     ->setDefault($revision->title(true))
     ->addTip('Title to be used when referring to this revision on the revision logs or public comment systems')
     ->addTip('Should be left blank unless a special name is needed for some reason, so that standard names can be used and automatically updated');

@@ -22,7 +22,7 @@ class Revisions
                     'page_uuid' => $revision->pageUUID(),
                     'num' => $revision->number(),
                     'name' => $revision->name(),
-                    'title' => $revision->title(),
+                    'title' => $revision->title(true),
                     'effective' => $revision->effective() ? $revision->effective()->format('Y-m-d') : null,
                     'type' => $revision->type()->__toString(),
                     'moved' => $revision->moved(),

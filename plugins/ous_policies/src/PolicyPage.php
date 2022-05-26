@@ -7,8 +7,6 @@ use DigraphCMS\Cron\DeferredJob;
 use DigraphCMS\RichContent\RichContent;
 use DigraphCMS\URL\URL;
 use DigraphCMS\Users\User;
-use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPeriods;
-use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentSelect;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\RevisionSelect;
@@ -158,12 +156,14 @@ class PolicyPage extends AbstractPage
 
     public function name(?string $name = null, bool $unfiltered = false, bool $forDB = false): string
     {
-        $name = parent::name($name, $unfiltered);
-        if (!$forDB && $number = $this->policyNumber()) {
-            return "$number: $name";
-        } else {
-            return $name;
-        }
+        $number = $this->policyNumber();
+        $name = $this->policyName();
+        return "$number: $name";
+    }
+
+    public function policyName(): ?string
+    {
+        return $this['current'] ? $this['current.name'] : $this['policy_name'];
     }
 
     public function policyNumber(): ?string
@@ -175,6 +175,13 @@ class PolicyPage extends AbstractPage
     {
         unset($this['policy_number']);
         if ($policyNumber) $this['policy_number'] = $policyNumber;
+        return $this;
+    }
+
+    public function setPolicyName(?string $policyName)
+    {
+        unset($this['policy_name']);
+        if ($policyName) $this['policy_name'] = $policyName;
         return $this;
     }
 

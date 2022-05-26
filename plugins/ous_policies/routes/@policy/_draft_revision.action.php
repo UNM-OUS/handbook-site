@@ -26,6 +26,7 @@ $form = new FormWrapper('draft_revision_' . Context::pageUUID());
 $form->button()->setText('Create draft');
 
 $type = (new RevisionTypeField())
+    ->setDefault('firstweb')
     ->setRequired(true);
 $form->addChild($type);
 
@@ -37,7 +38,7 @@ $effective = (new DateField('Effective date'))
     ->setDefault(new DateTime());
 $form->addChild($effective);
 
-$title = (new Field('Revision title'))
+$title = (new Field('Custom revision title'))
     ->addTip('Title to be used when referring to this revision on the revision logs or public comment systems')
     ->addTip('Should be left blank unless a special name is needed for some reason, so that standard names can be used and automatically updated');
 $form->addChild($title);
@@ -58,10 +59,9 @@ if (Context::arg('from') && $from = Revisions::get(Context::arg('from'), Context
     }
 }
 
-// defaults for first revision
-if (!Context::page()->revisions()->count()) {
-    $title->setDefault('Policy created');
-    $type->setDefault('created');
+// check if there's a previous revision
+if (Context::arg('from')) {
+    $type->setDefault('minor');
 }
 
 // handle form
@@ -70,7 +70,7 @@ $form->addCallback(function () use ($clones, $title, $type, $moved, $effective) 
         $title->value(),
         Context::pageUUID(),
         Context::page()->policyNumber(),
-        Context::page()->name(null, true, true),
+        Context::page()->policyName(),
         $effective->value(),
         $type->value(),
         $moved->value(),

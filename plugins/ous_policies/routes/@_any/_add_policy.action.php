@@ -48,7 +48,7 @@ $form->addCallback(function () use ($name, $number) {
     $policy = new PolicyPage();
     $policy->setUUID(Context::arg('uuid'));
     $policy->setPolicyNumber($number->value());
-    $policy->name($name->value());
+    $policy->setPolicyName($name->value());
     $policy->insert(Context::pageUUID());
     Notifications::flashConfirmation('Created new policy');
     throw new RedirectException($policy->url('_draft_revision'));
