@@ -76,6 +76,7 @@ $revisions = Revisions::select()
 
 if (!Context::arg('show_minor')) {
     $revisions->where('type <> "minor"');
+    $revisions->where('type <> "firstweb"');
 }
 
 if (Context::arg('only_policy')) {
