@@ -103,7 +103,7 @@ class Policies extends AbstractPlugin
                 $number
             );
             $title = "UAP Policy $number";
-            $$name = "UAP $number";
+            $name = "UAP $number";
         }
         if ($url) return (new A($url))
             ->addChild($s->getContent() ?? $name)
