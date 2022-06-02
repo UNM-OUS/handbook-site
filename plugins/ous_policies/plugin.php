@@ -63,7 +63,7 @@ class Policies extends AbstractPlugin
                 $title = "RPM Section $section";
                 $name = "RPM $section";
             }
-        } elseif ($s->getBbCode() == 'preface') {
+        } elseif (!$s->getBbCode() || $s->getBbCode() == 'preface') {
             $url = 'https://policy.unm.edu/regents-policies/index.html';
             $title = "RPM Preface";
             $name = "RPM Preface";
@@ -87,7 +87,7 @@ class Policies extends AbstractPlugin
         $url = null;
         $title = 'UAP Policy';
         $name = 'UAP Policy';
-        if ($s->getBbCode() == 'preface') {
+        if (!$s->getBbCode() || $s->getBbCode() == 'preface') {
             $url = 'https://policy.unm.edu/university-policies/index.html';
             $title = "UAP Preface";
             $name = "UAP Preface";
