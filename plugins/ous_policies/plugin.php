@@ -14,6 +14,14 @@ use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 class Policies extends AbstractPlugin
 {
 
+    public function onShortCode_indent(ShortcodeInterface $s): ?string
+    {
+        return (new DIV)
+            ->addClass('policy-indent')
+            ->setAttribute('markdown', '1')
+            ->addChild($s->getContent());
+    }
+
     public function onShortCode_policytoc(ShortcodeInterface $s): ?string
     {
         $page = Pages::get($s->getBbCode() ?? Context::pageUUID());
@@ -33,6 +41,7 @@ class Policies extends AbstractPlugin
     public function onShortCode_rpm(ShortcodeInterface $s): ?string
     {
         $url = null;
+        $title = 'RPM Policy';
         $name = 'RPM Policy';
         if (preg_match('/([0-9]+)(\.([0-9]+))?/', $s->getBbCode(), $matches)) {
             $section = intval($matches[1]);
@@ -44,39 +53,47 @@ class Policies extends AbstractPlugin
                     $section,
                     $number
                 );
-                $name = "RPM Section $section.$number";
+                $title = "RPM Section $section.$number";
+                $name = "RPM $section.$number";
             } else {
                 $url = sprintf(
                     'https://policy.unm.edu/regents-policies/section-%s/index.html',
                     $section
                 );
-                $name = "RPM Section $section";
+                $title = "RPM Section $section";
+                $name = "RPM $section";
             }
         } elseif ($s->getBbCode() == 'preface') {
             $url = 'https://policy.unm.edu/regents-policies/index.html';
+            $title = "RPM Preface";
             $name = "RPM Preface";
         } elseif ($s->getBbCode() == 'toc') {
             $url = 'https://policy.unm.edu/regents-policies/table-of-contents.html';
+            $title = "RPM Table of Contents";
             $name = "RPM Table of Contents";
         } elseif ($s->getBbCode() == 'foreword') {
             $url = 'https://policy.unm.edu/regents-policies/foreword.html';
+            $title = "RPM Foreword";
             $name = "RPM Foreword";
         }
         return (new A($url))
             ->addChild($s->getContent() ?? $name)
-            ->setAttribute('title', $name);
+            ->setAttribute('title', $title);
         return null;
     }
 
     public function onShortCode_uap(ShortcodeInterface $s): ?string
     {
         $url = null;
+        $title = 'UAP Policy';
         $name = 'UAP Policy';
         if ($s->getBbCode() == 'preface') {
             $url = 'https://policy.unm.edu/university-policies/index.html';
+            $title = "UAP Preface";
             $name = "UAP Preface";
         } elseif ($s->getBbCode() == 'toc') {
             $url = 'https://policy.unm.edu/university-policies/table-of-contents.html';
+            $title = "UAP Table of Contents";
             $name = "UAP Table of Contents";
         } elseif ($number = intval($s->getBbCode())) {
             $section = floor($number / 1000) * 1000;
@@ -85,11 +102,12 @@ class Policies extends AbstractPlugin
                 $section,
                 $number
             );
-            $name = "UAP Policy $number";
+            $title = "UAP Policy $number";
+            $$name = "UAP $number";
         }
         if ($url) return (new A($url))
             ->addChild($s->getContent() ?? $name)
-            ->setAttribute('title', $name);
+            ->setAttribute('title', $title);
         else return null;
     }
 

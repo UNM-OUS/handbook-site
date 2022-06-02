@@ -3,18 +3,23 @@
     font-family: $font-header;
     margin-bottom: $grid/2;
 }
+
 .policytoc__changes__rename {
     color: var(--cue-information);
 }
+
 .policytoc__changes__move-in {
     color: var(--cue-information);
 }
+
 .policytoc__changes__move-out {
     color: var(--cue-warning);
 }
+
 .policytoc__changes__addition {
     color: var(--cue-safe);
 }
+
 .policytoc__changes__abolition {
     color: var(--cue-danger);
 }
@@ -25,4 +30,10 @@
     border: $border solid #d6a461;
     box-shadow: none;
     margin-top: 3 * $grid;
+}
+
+.policy-indent {
+    margin-left: $grid*2;
+    padding-left: $grid;
+    border-left: 1px dotted rgba(214, 164, 97, 0.8);
 }
