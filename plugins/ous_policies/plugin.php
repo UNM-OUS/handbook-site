@@ -9,6 +9,7 @@ use DigraphCMS\DB\AbstractMappedSelect;
 use DigraphCMS\HTML\A;
 use DigraphCMS\HTML\DIV;
 use DigraphCMS\Plugins\AbstractPlugin;
+use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 
 class Policies extends AbstractPlugin
@@ -36,6 +37,19 @@ class Policies extends AbstractPlugin
             ->addClass('card card--policyinfo')
             ->setAttribute('markdown', '1')
             ->addChild($s->getContent());
+    }
+
+    public function onShortCode_fhb(ShortcodeInterface $s): ?string
+    {
+        $revision = Revisions::select()
+            ->publicView()
+            ->where('`num` LIKE ?', [$s->getBbCode()])
+            ->fetch();
+        if (!$revision) return null;
+        return (new A($revision->policy()->url()))
+            ->addChild($s->getContent() ?? "FHB " . strtoupper($s->getBbCode()))
+            ->setAttribute('title', $revision->policy()->name());
+        return null;
     }
 
     public function onShortCode_rpm(ShortcodeInterface $s): ?string
