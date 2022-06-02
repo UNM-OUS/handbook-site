@@ -224,8 +224,6 @@ class PolicyTableOfContents extends Tag
             function (AbstractPage $child) {
                 // break cycles
                 if (in_array($child->uuid(), $this->parents)) return false;
-                // don't include policies with no current revision
-                if ($child instanceof PolicyPage && !$child->currentRevision()) return false;
                 // include by default
                 return true;
             }

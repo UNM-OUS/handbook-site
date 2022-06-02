@@ -27,7 +27,7 @@ Breadcrumb::parent(new URL('_revision_history.html'));
 ActionMenu::addContextAction(new URL("_edit_revision.html?uuid=$uuid"));
 ActionMenu::addContextAction(new URL("_delete_revision.html?uuid=$uuid"));
 
-printf('<h1><a href="%s">Revision history</a></h1>', new URL('revision_history.html'));
+printf('<h1><a href="%s">Revision history</a></h1>', new URL('_revision_history.html'));
 
 $current = Context::page()->currentRevision();
 if (Context::page()->revisions()->count() > 1) {
