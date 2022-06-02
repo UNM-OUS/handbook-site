@@ -69,7 +69,19 @@ class PolicyTableOfContents extends Tag
                 ->addClass('policytoc__changes')
                 ->addClass('card')
                 ->addClass('card--light');
-            foreach ($this->generateChanges() as $child) {
+            $cacheID = 'policy/toc/changes-' . md5(serialize([
+                $this->page->uuid(),
+                $this->prefixes,
+                $this->parents
+            ]));
+            $changes = Cache::get(
+                $cacheID,
+                function () {
+                    return $this->generateChanges();
+                },
+                1800
+            );
+            foreach ($changes as $child) {
                 $this->changesBlock->addChild($child);
             }
         }
@@ -193,14 +205,14 @@ class PolicyTableOfContents extends Tag
 
     protected function generateItems(): array
     {
-        $cacheID = 'policy/toc/' . md5(serialize([
+        $cacheID = 'policy/toc/items-' . md5(serialize([
             $this->page->uuid(),
             $this->prefixes,
             $this->parents
         ]));
         return Cache::get($cacheID, function () {
             return $this->doGenerateItems();
-        }, 300);
+        }, 60);
     }
 
     protected function doGenerateItems(): array

@@ -143,7 +143,11 @@ class PolicyRevision extends FlatArray
                 Format::date($this->effective(), false, false)
             );
         } else {
-            return $this->title();
+            return sprintf(
+                '%s - %s',
+                $this->title(),
+                $this->state()->label()
+            );
         }
     }
 

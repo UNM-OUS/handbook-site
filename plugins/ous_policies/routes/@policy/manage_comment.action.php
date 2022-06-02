@@ -13,6 +13,7 @@ use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 
 $revisions = Revisions::select(Context::pageUUID())
+    ->order('CASE WHEN effective is null THEN 1 ELSE 2 END')
     ->order('effective DESC');
 
 $table = new QueryTable(
@@ -25,15 +26,15 @@ $table = new QueryTable(
                 '%s<a href="%s">%s</a>',
                 new ToolbarLink("Add comment period", "add", null, new URL('_add_comment.html?revision=' . $revision->uuid())),
                 $revision->url(),
-                $revision->title()
+                $revision->metaTitle()
             ),
-            Format::date($revision->effective()),
             new QueryTable(
                 $query,
                 function (RevisionComment $comment): array {
                     return [
                         sprintf(
-                            '<strong>%s - %s<br>%s</strong>',
+                            '<strong><a href="%s">%s - %s<br>%s</a></strong>',
+                            $comment->url(),
                             Format::date($comment->start()),
                             Format::date($comment->end()),
                             $comment->name()
@@ -63,7 +64,6 @@ $table = new QueryTable(
     },
     [
         new ColumnHeader('Revision'),
-        new ColumnHeader('Effective'),
         new ColumnHeader('')
     ]
 );

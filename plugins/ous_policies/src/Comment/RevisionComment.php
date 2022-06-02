@@ -6,89 +6,98 @@ use DateTime;
 use DigraphCMS\Digraph;
 use DigraphCMS\RichContent\RichContent;
 use DigraphCMS\Session\Session;
+use DigraphCMS\URL\URL;
 use DigraphCMS\Users\User;
 use DigraphCMS\Users\Users;
+use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
+use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 
 class RevisionComment
 {
-    protected $revision_uuid, $start, $end, $name, $notes;
+    /** @var string */
+    protected $start, $end;
+    protected $revision_uuid, $title, $notes;
     protected $uuid, $created, $created_by, $updated, $updated_by;
 
     public function __construct(
-        string $revision_uuid,
-        DateTime $start,
-        DateTime $end,
-        string $name,
-        ?RichContent $notes,
+        string $revision_uuid = null,
+        DateTime $start = null,
+        DateTime $end = null,
+        string $title = null,
+        ?RichContent $notes = null,
         string $uuid = null,
-        int $created = null,
-        string $created_by = null,
-        int $updated = null,
-        string $updated_by = null
     ) {
-        $this->revision_uuid = $revision_uuid;
-        $this->setStart($start);
-        $this->setEnd($end);
-        $this->name = $name;
-        $this->setNotes($notes);
-        $this->uuid = $uuid ?? Digraph::uuid();
-        $this->created = $created ?? time();
-        $this->created_by =  $created_by ?? Session::uuid();
-        $this->updated = $updated ?? time();
-        $this->updated_by =  $updated_by ?? Session::uuid();
+        $this->revision_uuid = $this->revision_uuid ?? $revision_uuid;
+        $this->start = $start ? $start->format('Y-m-d') : ($this->start ?? date('Y-m-d'));
+        $this->end = $end ? $end->format('Y-m-d') : ($this->end ?? date('Y-m-d'));
+        $this->title = $title ?? $this->title;
+        if ($notes) $this->setNotes($notes);
+        else $this->setNotes(null);
+        $this->uuid = $uuid ?? $this->uuid ?? Digraph::uuid();
+        $this->created = $created ?? $this->created ?? time();
+        $this->created_by =  $created_by ?? $this->created_by ?? Session::uuid();
+        $this->updated = $updated ?? $this->updated ?? time();
+        $this->updated_by =  $updated_by ?? $this->updated_by ?? Session::uuid();
+    }
+
+    public function url(): URL
+    {
+        return $this->revision()->policy()->url($this->uuid());
     }
 
     public function setStart(DateTime $start)
     {
-        $start = clone $start;
-        $start->setTime(0, 0, 0, 0);
-        $this->start = $start;
+        $this->start = $start->format('Y-m-d');
         return $this;
     }
 
     public function setEnd(DateTime $end)
     {
-        $end = clone $end;
-        $end->setTime(0, 0, 0, 0);
-        $this->end = $end;
+        $this->end = $end->format('Y-m-d');
         return $this;
     }
 
     public function setName(string $name)
     {
-        $this->name = $name;
+        $this->title = $name;
         return $this;
     }
 
     public function setNotes(?RichContent $notes)
     {
-        $this->notes = $notes ?? new RichContent('');
+        $notes = $notes ?? new RichContent('');
+        $this->notes = json_encode($notes->array());
         return $this;
     }
 
     public function start(): DateTime
     {
-        return clone $this->start;
+        return DateTime::createFromFormat('Y-m-d', $this->start);
     }
 
     public function end(): DateTime
     {
-        return clone $this->end;
+        return DateTime::createFromFormat('Y-m-d', $this->end);
     }
 
     public function name(): string
     {
-        return $this->name;
+        return $this->title;
     }
 
     public function notes(): RichContent
     {
-        return $this->notes;
+        return new RichContent(json_decode($this->notes, true));
     }
 
     public function uuid(): string
     {
         return $this->uuid;
+    }
+
+    public function revision(): PolicyRevision
+    {
+        return Revisions::get($this->revision_uuid);
     }
 
     public function revisionUUID(): string

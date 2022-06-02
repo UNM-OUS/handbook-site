@@ -57,12 +57,12 @@ class PolicyPage extends AbstractPage
     }
 
     /**
-     * Do a weekly refresh of cron jobs for every policy, just in case cron
+     * Do a daily refresh of cron jobs for every policy, just in case cron
      * tasks are added later.
      *
      * @return void
      */
-    public function onCron_weekly()
+    public function onCron_daily()
     {
         $this->prepareCronJobs();
     }
@@ -72,7 +72,7 @@ class PolicyPage extends AbstractPage
      *
      * @return void
      */
-    public function onCron_frequent()
+    public function onCron_halfhourly()
     {
         if ($rev = $this->currentRevision()) {
             $this['current'] = static::revisionCacheArray($rev);
