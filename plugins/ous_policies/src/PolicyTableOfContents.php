@@ -132,7 +132,7 @@ class PolicyTableOfContents extends Tag
                     // if prefix matches, this revision moved the policy INTO this prefix
                     if ($rev->moved()) {
                         $previous = $rev->previousRevision();
-                        if ($this->prefixMatches($previous->number())) {
+                        if ($previous && $this->prefixMatches($previous->number())) {
                             $alreadyListedMoves[] = $previous->uuid();
                             return sprintf(
                                 '<div class="policytoc__changes__rename"><a href="%s">Renamed %s</a>: <a href="%s">%s</a> (formerly <strong>%s</strong>)</div>',
@@ -140,15 +140,15 @@ class PolicyTableOfContents extends Tag
                                 Format::date($rev->effective()),
                                 $rev->policy()->url(),
                                 $rev->fullName(),
-                                $rev->previousRevision()->fullName()
+                                $previous->fullName()
                             );
-                        } else {
+                        } elseif($previous) {
                             return sprintf(
                                 '<div class="policytoc__changes__move-in"><a href="%s">Moved %s</a>: %s (formerly <strong>%s</strong>)</div>',
                                 $rev->url(),
                                 Format::date($rev->effective()),
                                 $rev->policy()->url()->html(),
-                                $rev->previousRevision()->fullName()
+                                $previous->fullName()
                             );
                         }
                     }
@@ -157,7 +157,7 @@ class PolicyTableOfContents extends Tag
                     if (!in_array($rev->uuid(), $alreadyListedMoves)) {
                         // must not have already been listed as a move into this prefix above
                         $previous = $rev->previousRevision();
-                        if ($this->prefixMatches($previous->number())) {
+                        if ($previous && $this->prefixMatches($previous->number())) {
                             return sprintf(
                                 '<div class="policytoc__changes__move-out"><a href="%s">Moved %s</a>: <strong>%s</strong> is now <a href="%s">%s</a></div>',
                                 $rev->url(),
