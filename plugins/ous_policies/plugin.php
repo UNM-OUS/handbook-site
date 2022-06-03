@@ -47,7 +47,7 @@ class Policies extends AbstractPlugin
             ->fetch();
         if (!$revision) return null;
         return (new A($revision->policy()->url()))
-            ->addChild($s->getContent() ?? "FHB " . strtoupper($s->getBbCode()))
+            ->addChild($s->getContent() ?? "FH " . strtoupper($s->getBbCode()))
             ->setAttribute('title', $revision->policy()->name());
         return null;
     }

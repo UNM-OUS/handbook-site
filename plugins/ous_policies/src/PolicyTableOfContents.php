@@ -94,7 +94,7 @@ class PolicyTableOfContents extends Tag
         $revisions = Revisions::select()
             ->publicView()
             ->where('effective <= ?', [date('Y-m-d')])
-            ->where('effective >= ?', [date('Y-m-d', strtotime('-1 year'))])
+            ->where('effective >= ?', [date('Y-m-d', strtotime('-2 years'))])
             ->where("type IN ('abolished','created') OR moved = 1")
             ->order('effective desc, id desc');
         $alreadyListedMoves = [];
@@ -173,7 +173,7 @@ class PolicyTableOfContents extends Tag
             },
             $revisions->fetchAll()
         ));
-        if ($out) array_unshift($out, "<div class='policytoc__changes__header'>Organizational changes in the last year:</div>");
+        if ($out) array_unshift($out, "<div class='policytoc__changes__header'>Organizational changes in the last two years:</div>");
         return $out;
     }
 
