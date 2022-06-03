@@ -32,8 +32,19 @@
     margin-top: 3 * $grid;
 }
 
+#content {
+
+    ul,
+    ol {
+
+        ul,
+        ol {
+            border-left: 1px dotted rgba(214, 164, 97, 0.8);
+        }
+    }
+}
+
 .policy-indent {
-    margin-left: $grid*2;
-    padding-left: $grid;
+    padding-left: $grid*2;
     border-left: 1px dotted rgba(214, 164, 97, 0.8);
 }

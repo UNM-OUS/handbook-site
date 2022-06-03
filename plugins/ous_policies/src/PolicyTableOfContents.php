@@ -173,7 +173,6 @@ class PolicyTableOfContents extends Tag
             },
             $revisions->fetchAll()
         ));
-        if ($out) array_unshift($out, "<div class='policytoc__changes__header'>Recent organizational changes:</div>");
         return $out;
     }
 
