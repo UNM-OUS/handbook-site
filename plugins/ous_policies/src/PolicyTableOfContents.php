@@ -94,7 +94,7 @@ class PolicyTableOfContents extends Tag
         $revisions = Revisions::select()
             ->publicView()
             ->where('effective <= ?', [date('Y-m-d')])
-            ->where('effective >= ?', [date('Y-m-d', strtotime('-2 years'))])
+            ->where('effective >= ?', [date('Y-m-d', strtotime('-3 years'))])
             ->where("(type IN ('abolished','created') OR moved = 1)")
             ->order('effective desc, id desc');
         $alreadyListedMoves = [];
