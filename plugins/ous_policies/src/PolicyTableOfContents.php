@@ -216,7 +216,7 @@ class PolicyTableOfContents extends Tag
 
     protected function doGenerateItems(): array
     {
-        $children = Pages::children($this->page->uuid())->fetchAll();
+        $children = $this->page->children()->fetchAll();
         // filter things that shouldn't be in this list
         $children = array_filter(
             $children,
@@ -233,7 +233,7 @@ class PolicyTableOfContents extends Tag
         return array_map(
             function (AbstractPage $child): LI {
                 $li = new LI;
-                $childCount = Pages::children($child->uuid())->count();
+                $childCount = $child->children()->count();
                 if ($child instanceof PolicyPage) {
                     $li->addChild($child->url()->html());
                 } else {

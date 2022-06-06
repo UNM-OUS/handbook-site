@@ -133,6 +133,11 @@ class Policies extends AbstractPlugin
         usort($pages, function (AbstractPage $a, AbstractPage $b) {
             $aPolicy = $a instanceof PolicyPage;
             $bPolicy = $b instanceof PolicyPage;
+            // first respect sort weight differences
+            if ($weightDiff = $a->sortWeight() - $b->sortWeight()) {
+                return $weightDiff;
+            }
+            // then sort by policy/number/information-ness
             $aNumber = $aPolicy ? $a->policyNumber() : false;
             $bNumber = $bPolicy ? $b->policyNumber() : false;
             $aInfo = $aNumber ? strtolower($aNumber) == 'information' : false;

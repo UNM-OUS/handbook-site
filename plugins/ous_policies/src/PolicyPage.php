@@ -158,7 +158,8 @@ class PolicyPage extends AbstractPage
     {
         $number = $this->policyNumber();
         $name = $this->policyName();
-        return "$number: $name";
+        if ($number) return "$number: $name";
+        else return $name;
     }
 
     public function policyName(): ?string

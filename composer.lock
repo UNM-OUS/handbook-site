@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "byjoby/destructr",
-            "version": "v1.6.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jobyone/destructr.git",
-                "reference": "da7660fa206874c75ae83ea2b8ba8985ab5b2bb1"
+                "reference": "11e6e430729bf8738fa61fb0d95cca11c976692f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jobyone/destructr/zipball/da7660fa206874c75ae83ea2b8ba8985ab5b2bb1",
-                "reference": "da7660fa206874c75ae83ea2b8ba8985ab5b2bb1",
+                "url": "https://api.github.com/repos/jobyone/destructr/zipball/11e6e430729bf8738fa61fb0d95cca11c976692f",
+                "reference": "11e6e430729bf8738fa61fb0d95cca11c976692f",
                 "shasum": ""
             },
             "require": {
@@ -41,9 +41,9 @@
             "description": "A library for storing a mix of structured and unstructured data in relational databases",
             "support": {
                 "issues": "https://github.com/jobyone/destructr/issues",
-                "source": "https://github.com/jobyone/destructr/tree/v1.6.0"
+                "source": "https://github.com/jobyone/destructr/tree/v1.6.1"
             },
-            "time": "2022-06-04T20:13:20+00:00"
+            "time": "2022-06-06T19:05:38+00:00"
         },
         {
             "name": "byjoby/flatrr",
