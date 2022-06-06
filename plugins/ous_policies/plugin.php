@@ -131,13 +131,12 @@ class Policies extends AbstractPlugin
             $pages = $pages->fetchAll();
         }
         usort($pages, function (AbstractPage $a, AbstractPage $b) {
+            // first respect sort weight differences
+            $weightDiff = $a->sortWeight() - $b->sortWeight();
+            if ($weightDiff !== 0) return $weightDiff;
+            // then sort by policy-ness/number/information-ness
             $aPolicy = $a instanceof PolicyPage;
             $bPolicy = $b instanceof PolicyPage;
-            // first respect sort weight differences
-            if ($weightDiff = $a->sortWeight() - $b->sortWeight()) {
-                return $weightDiff;
-            }
-            // then sort by policy/number/information-ness
             $aNumber = $aPolicy ? $a->policyNumber() : false;
             $bNumber = $bPolicy ? $b->policyNumber() : false;
             $aInfo = $aNumber ? strtolower($aNumber) == 'information' : false;
@@ -150,7 +149,7 @@ class Policies extends AbstractPlugin
                 return version_compare($aNumber, $bNumber);
             }
             // sort by name by default
-            return strcmp($a->name(), $b->name());
+            return strcasecmp($a->name(), $b->name());
         });
         return $pages;
     }
