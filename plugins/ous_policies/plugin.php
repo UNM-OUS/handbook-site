@@ -148,8 +148,8 @@ class Policies extends AbstractPlugin
                 // compare by policy number
                 return version_compare($aNumber, $bNumber);
             }
-            // sort by name by default
-            return strcasecmp($a->name(), $b->name());
+            // sort by name/sortName as a last resort
+            return strcasecmp($a->sortName() ?? $a->name(), $b->sortName() ?? $b->name());
         });
         return $pages;
     }
