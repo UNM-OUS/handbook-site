@@ -10,12 +10,12 @@ $menu->addClass('menubar--vertical');
 $menu->addClass('menubar--manual-toggle');
 $menu->addClass('sidebar__menu');
 
-if ($page = Pages::get('section_a')) $menu->addPageDropdown($page);
-if ($page = Pages::get('section_b')) $menu->addPageDropdown($page);
-if ($page = Pages::get('section_c')) $menu->addPageDropdown($page);
-if ($page = Pages::get('section_d')) $menu->addPageDropdown($page);
-if ($page = Pages::get('section_e')) $menu->addPageDropdown($page);
-if ($page = Pages::get('section_f')) $menu->addPageDropdown($page);
+if ($page = Pages::get('section_a')) $menu->addPageDropdown($page, null, true);
+if ($page = Pages::get('section_b')) $menu->addPageDropdown($page, null, true);
+if ($page = Pages::get('section_c')) $menu->addPageDropdown($page, null, true);
+if ($page = Pages::get('section_d')) $menu->addPageDropdown($page, null, true);
+if ($page = Pages::get('section_e')) $menu->addPageDropdown($page, null, true);
+if ($page = Pages::get('section_f')) $menu->addPageDropdown($page, null, true);
 
 $menu->addURL(new URL('/pdf/'), 'Faculty Handbook PDFs');
 
