@@ -14,10 +14,6 @@
             columns: 2;
             column-gap: $grid;
         }
-
-        @media (min-width: 45rem) {
-            columns: 3;
-        }
     }
 }
 
