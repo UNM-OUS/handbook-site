@@ -6,7 +6,6 @@
 </p>
 <?php
 
-use DigraphCMS\UI\Breadcrumb;
-use DigraphCMS\URL\URL;
+use DigraphCMS\Context;
 
-Breadcrumb::parent(new URL('/policies/'));
+Context::fields()['template-sidebar'] = true;

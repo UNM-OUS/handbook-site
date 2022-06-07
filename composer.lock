@@ -91,21 +91,21 @@
         },
         {
             "name": "cakephp/core",
-            "version": "4.3.10",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/core.git",
-                "reference": "499f17738d40560ec077d7d2039c9af4969c6b17"
+                "reference": "884555efcf573ea23597f9c88a12ed6d58af00f3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/core/zipball/499f17738d40560ec077d7d2039c9af4969c6b17",
-                "reference": "499f17738d40560ec077d7d2039c9af4969c6b17",
+                "url": "https://api.github.com/repos/cakephp/core/zipball/884555efcf573ea23597f9c88a12ed6d58af00f3",
+                "reference": "884555efcf573ea23597f9c88a12ed6d58af00f3",
                 "shasum": ""
             },
             "require": {
                 "cakephp/utility": "^4.0",
-                "php": ">=7.2.0"
+                "php": ">=7.4.0"
             },
             "suggest": {
                 "cakephp/cache": "To use Configure::store() and restore().",
@@ -144,26 +144,26 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/core"
             },
-            "time": "2022-03-10T13:13:51+00:00"
+            "time": "2022-05-31T20:57:08+00:00"
         },
         {
             "name": "cakephp/database",
-            "version": "4.3.10",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/database.git",
-                "reference": "f565f9d296817692031852d142ee28e0d48f4dd9"
+                "reference": "9bb8b691f36729fd630118a1cc7b52f9ae13d126"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/database/zipball/f565f9d296817692031852d142ee28e0d48f4dd9",
-                "reference": "f565f9d296817692031852d142ee28e0d48f4dd9",
+                "url": "https://api.github.com/repos/cakephp/database/zipball/9bb8b691f36729fd630118a1cc7b52f9ae13d126",
+                "reference": "9bb8b691f36729fd630118a1cc7b52f9ae13d126",
                 "shasum": ""
             },
             "require": {
                 "cakephp/core": "^4.0",
                 "cakephp/datasource": "^4.0",
-                "php": ">=7.2.0"
+                "php": ">=7.4.0"
             },
             "suggest": {
                 "cakephp/i18n": "If you are using locale-aware datetime formats or Chronos types."
@@ -199,25 +199,25 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/database"
             },
-            "time": "2022-03-29T14:10:04+00:00"
+            "time": "2022-04-12T01:11:53+00:00"
         },
         {
             "name": "cakephp/datasource",
-            "version": "4.3.10",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/datasource.git",
-                "reference": "106ac9cb54a852f286dd2fe21e131c51f4a3d7fb"
+                "reference": "be1f2177054df1904588fd4775f8954837529a9b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/datasource/zipball/106ac9cb54a852f286dd2fe21e131c51f4a3d7fb",
-                "reference": "106ac9cb54a852f286dd2fe21e131c51f4a3d7fb",
+                "url": "https://api.github.com/repos/cakephp/datasource/zipball/be1f2177054df1904588fd4775f8954837529a9b",
+                "reference": "be1f2177054df1904588fd4775f8954837529a9b",
                 "shasum": ""
             },
             "require": {
                 "cakephp/core": "^4.0",
-                "php": ">=7.2.0",
+                "php": ">=7.4.0",
                 "psr/log": "^1.0 || ^2.0",
                 "psr/simple-cache": "^1.0 || ^2.0"
             },
@@ -257,25 +257,25 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/datasource"
             },
-            "time": "2022-05-10T07:45:43+00:00"
+            "time": "2022-05-13T04:02:19+00:00"
         },
         {
             "name": "cakephp/utility",
-            "version": "4.3.10",
+            "version": "4.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/utility.git",
-                "reference": "3d352060ca3e49c81c3fd2bdb092ee345d8f4e38"
+                "reference": "b2a47e038954432b2e09d3406559a75656ebe131"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/utility/zipball/3d352060ca3e49c81c3fd2bdb092ee345d8f4e38",
-                "reference": "3d352060ca3e49c81c3fd2bdb092ee345d8f4e38",
+                "url": "https://api.github.com/repos/cakephp/utility/zipball/b2a47e038954432b2e09d3406559a75656ebe131",
+                "reference": "b2a47e038954432b2e09d3406559a75656ebe131",
                 "shasum": ""
             },
             "require": {
                 "cakephp/core": "^4.0",
-                "php": ">=7.2.0"
+                "php": ">=7.4.0"
             },
             "suggest": {
                 "ext-intl": "To use Text::transliterate() or Text::slug()",
@@ -316,7 +316,7 @@
                 "issues": "https://github.com/cakephp/cakephp/issues",
                 "source": "https://github.com/cakephp/utility"
             },
-            "time": "2022-01-28T18:02:00+00:00"
+            "time": "2022-05-20T04:16:49+00:00"
         },
         {
             "name": "caxy/php-htmldiff",
@@ -385,12 +385,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/digraph-cms/digraph-core.git",
-                "reference": "6360317c634125e3b329e9cbb4642090b317e519"
+                "reference": "1a22379b9d0bdc8787caa7985d27109c139bb5a1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/6360317c634125e3b329e9cbb4642090b317e519",
-                "reference": "6360317c634125e3b329e9cbb4642090b317e519",
+                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/1a22379b9d0bdc8787caa7985d27109c139bb5a1",
+                "reference": "1a22379b9d0bdc8787caa7985d27109c139bb5a1",
                 "shasum": ""
             },
             "require": {
@@ -462,7 +462,7 @@
                 "issues": "https://github.com/digraph-cms/digraph-core/issues",
                 "source": "https://github.com/digraph-cms/digraph-core/tree/v2"
             },
-            "time": "2022-06-06T18:53:48+00:00"
+            "time": "2022-06-07T18:46:22+00:00"
         },
         {
             "name": "donatj/phpuseragentparser",
@@ -4158,5 +4158,5 @@
     "platform-overrides": {
         "php": "7.4.15"
     },
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

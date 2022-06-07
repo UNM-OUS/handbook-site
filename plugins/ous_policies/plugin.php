@@ -3,6 +3,7 @@
 namespace DigraphCMS_Plugins\unmous\ous_policies;
 
 use DigraphCMS\Content\AbstractPage;
+use DigraphCMS\Content\Graph;
 use DigraphCMS\Content\Pages;
 use DigraphCMS\Context;
 use DigraphCMS\DB\AbstractMappedSelect;
@@ -14,6 +15,17 @@ use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 
 class Policies extends AbstractPlugin
 {
+
+    public function getAllPolicies(string $parentUUID = null): array
+    {
+        if (!$parentUUID) {
+            $policies = Pages::select()
+                ->where('type = ?',['policy']);
+        }else {
+            $policies = [];
+        }
+        return static::sortPages($policies);
+    }
 
     public function onShortCode_indent(ShortcodeInterface $s): ?string
     {

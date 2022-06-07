@@ -1,0 +1,99 @@
+#content-wrapper {
+    display: contents;
+
+    #content-sidebar {
+        margin: $grid*2;
+        background: var(--background-dark);
+        padding: $grid/2;
+        font-size: small;
+        font-family: $font-ui;
+        margin: 0;
+        padding: $grid*2;
+
+        @media (min-width: 30rem) {
+            columns: 2;
+            column-gap: $grid;
+        }
+
+        @media (min-width: 45rem) {
+            columns: 3;
+        }
+    }
+}
+
+.sidebar__menu {
+    display: none;
+}
+
+#main-content-wrapper {
+    display: contents;
+}
+
+#breadcrumb {
+    padding: $grid/8 $grid/2;
+    background-color: var(--background-lighter);
+}
+
+@media (min-width: 55rem) {
+    #content-wrapper {
+        display: grid;
+        grid-template-columns: [content] auto [sidebar] 15rem;
+        padding: $grid*2;
+        column-gap: $grid*2;
+        border-top: 2px solid var(--background-lighter);
+
+        .sidebar__menu {
+            display: flex;
+            margin-left: -$grid;
+            margin-right: -$grid;
+            background-color: transparent;
+            color: inherit;
+
+            .menubar {
+                background-color: var(--background-darker);
+                color: inherit;
+                box-shadow: none;
+            }
+
+            &:first-child {
+                margin-top: -$grid;
+            }
+        }
+
+        #content-sidebar {
+            padding: $grid;
+            columns: 1;
+        }
+
+        #content {
+            display: contents;
+        }
+
+        #breadcrumb {
+            grid-column: 1 / -1;
+            grid-row: 1;
+        }
+
+        #content>.menubar--actionmenu {
+            grid-column: 1 / -1;
+            grid-row: 2;
+        }
+
+        #main-content-wrapper {
+            display: block;
+            grid-column: content;
+            grid-row: 3;
+        }
+
+        #content-sidebar {
+            grid-column: sidebar;
+            grid-row: 3 / span 2;
+        }
+    }
+}
+
+@media print {
+    #content-sidebar {
+        display: none !important;
+    }
+}
