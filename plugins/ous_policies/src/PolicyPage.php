@@ -74,17 +74,26 @@ class PolicyPage extends AbstractPage
      */
     public function onCron_halfhourly()
     {
-        if ($rev = $this->currentRevision()) {
-            $this['current'] = static::revisionCacheArray($rev);
-            if ($prev = $this->currentRevision()->previousRevision()) {
-                $this['previous'] = static::revisionCacheArray($prev);
-            } else {
-                unset($this['previous']);
+        $changed = false;
+        if ($current = $this->currentRevision()) {
+            if ($this['current'] != static::revisionCacheArray($current)) {
+                $this['current'] = static::revisionCacheArray($current);
+                $changed = true;
             }
-        } else {
+        } elseif ($this['current']) {
             unset($this['current']);
+            $changed = true;
         }
-        $this->update();
+        if ($current && $prev = $this->currentRevision()->previousRevision()) {
+            if ($this['previous'] != static::revisionCacheArray($prev)) {
+                $this['previous'] = static::revisionCacheArray($prev);
+                $changed = true;
+            }
+        } elseif ($this['previous']) {
+            unset($this['previous']);
+            $changed = true;
+        }
+        if ($changed) $this->update();
     }
 
     protected static function revisionCacheArray(PolicyRevision $rev): array
