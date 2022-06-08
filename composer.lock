@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "byjoby/destructr",
-            "version": "v1.6.1",
+            "version": "v1.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jobyone/destructr.git",
-                "reference": "11e6e430729bf8738fa61fb0d95cca11c976692f"
+                "reference": "40e1d5df2664b8993e74ed06614c38fe9da9696c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jobyone/destructr/zipball/11e6e430729bf8738fa61fb0d95cca11c976692f",
-                "reference": "11e6e430729bf8738fa61fb0d95cca11c976692f",
+                "url": "https://api.github.com/repos/jobyone/destructr/zipball/40e1d5df2664b8993e74ed06614c38fe9da9696c",
+                "reference": "40e1d5df2664b8993e74ed06614c38fe9da9696c",
                 "shasum": ""
             },
             "require": {
@@ -41,9 +41,9 @@
             "description": "A library for storing a mix of structured and unstructured data in relational databases",
             "support": {
                 "issues": "https://github.com/jobyone/destructr/issues",
-                "source": "https://github.com/jobyone/destructr/tree/v1.6.1"
+                "source": "https://github.com/jobyone/destructr/tree/v1.7.0"
             },
-            "time": "2022-06-06T19:05:38+00:00"
+            "time": "2022-06-08T17:11:28+00:00"
         },
         {
             "name": "byjoby/flatrr",
@@ -385,16 +385,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/digraph-cms/digraph-core.git",
-                "reference": "dda111bec849876fdc57f984d285371cd98c6a31"
+                "reference": "fc67e989963eb7df87de76e51fb54d228ddb2ee0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/dda111bec849876fdc57f984d285371cd98c6a31",
-                "reference": "dda111bec849876fdc57f984d285371cd98c6a31",
+                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/fc67e989963eb7df87de76e51fb54d228ddb2ee0",
+                "reference": "fc67e989963eb7df87de76e51fb54d228ddb2ee0",
                 "shasum": ""
             },
             "require": {
-                "byjoby/destructr": "^1.6",
+                "byjoby/destructr": "^1.7",
                 "byjoby/flatrr": "^1.3",
                 "caxy/php-htmldiff": "^0.1.10",
                 "donatj/phpuseragentparser": "^1.4",
@@ -462,20 +462,20 @@
                 "issues": "https://github.com/digraph-cms/digraph-core/issues",
                 "source": "https://github.com/digraph-cms/digraph-core/tree/v2"
             },
-            "time": "2022-06-08T14:52:56+00:00"
+            "time": "2022-06-08T17:52:54+00:00"
         },
         {
             "name": "donatj/phpuseragentparser",
-            "version": "v1.6.0",
+            "version": "v1.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/donatj/PhpUserAgent.git",
-                "reference": "c84fd3c205097843aab93290f2a5744b4159e815"
+                "reference": "264cf23eda626c223d21535584c33794be0ea338"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/donatj/PhpUserAgent/zipball/c84fd3c205097843aab93290f2a5744b4159e815",
-                "reference": "c84fd3c205097843aab93290f2a5744b4159e815",
+                "url": "https://api.github.com/repos/donatj/PhpUserAgent/zipball/264cf23eda626c223d21535584c33794be0ea338",
+                "reference": "264cf23eda626c223d21535584c33794be0ea338",
                 "shasum": ""
             },
             "require": {
@@ -519,7 +519,7 @@
             ],
             "support": {
                 "issues": "https://github.com/donatj/PhpUserAgent/issues",
-                "source": "https://github.com/donatj/PhpUserAgent/tree/v1.6.0"
+                "source": "https://github.com/donatj/PhpUserAgent/tree/v1.6.1"
             },
             "funding": [
                 {
@@ -531,7 +531,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-04-20T03:05:31+00:00"
+            "time": "2022-06-08T16:36:31+00:00"
         },
         {
             "name": "erusev/parsedown",
