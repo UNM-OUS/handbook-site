@@ -6,7 +6,6 @@ use DateTime;
 use DigraphCMS\DB\DB;
 use DigraphCMS\RichMedia\RichMedia;
 use DigraphCMS\Session\Session;
-use Exception;
 
 class Revisions
 {
