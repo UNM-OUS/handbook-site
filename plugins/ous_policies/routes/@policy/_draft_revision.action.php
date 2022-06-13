@@ -10,7 +10,6 @@ use DigraphCMS\HTML\Forms\FIELDSET;
 use DigraphCMS\HTML\Forms\FormWrapper;
 use DigraphCMS\HTTP\RedirectException;
 use DigraphCMS\RichContent\RichContent;
-use DigraphCMS\RichContent\RichContentField;
 use DigraphCMS\RichMedia\RichMedia;
 use DigraphCMS\UI\Breadcrumb;
 use DigraphCMS\UI\Notifications;
