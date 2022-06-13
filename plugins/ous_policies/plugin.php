@@ -3,7 +3,6 @@
 namespace DigraphCMS_Plugins\unmous\ous_policies;
 
 use DigraphCMS\Content\AbstractPage;
-use DigraphCMS\Content\Graph;
 use DigraphCMS\Content\Pages;
 use DigraphCMS\Context;
 use DigraphCMS\DB\AbstractMappedSelect;
