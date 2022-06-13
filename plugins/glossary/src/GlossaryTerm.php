@@ -62,13 +62,15 @@ class GlossaryTerm
         return Pages::get($this->pageUUID());
     }
 
-    public function cardContent(): string
+    public function cardContent($hideTitle = false): string
     {
-        if ($this->link()) {
-            return '<strong><a href="' . $this->link() . '" target="_blank">' . $this->name() . '</a></strong>' . new RichContent($this->body());
-        } else {
-            return '<strong>' . $this->name() . '</strong>' . new RichContent($this->body());
+        $out = '';
+        if (!$hideTitle) {
+            $out = $this->link()
+                ? '<strong><a href="' . $this->link() . '" target="_blank">' . $this->name() . '</a></strong>'
+                : '<strong>' . $this->name() . '</strong>';
         }
+        return $out . new RichContent($this->body());
     }
 
     /**
