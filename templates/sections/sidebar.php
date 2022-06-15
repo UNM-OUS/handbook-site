@@ -18,6 +18,7 @@ if ($page = Pages::get('section_e')) $menu->addPageDropdown($page, null, true);
 if ($page = Pages::get('section_f')) $menu->addPageDropdown($page, null, true);
 
 $menu->addURL(new URL('/pdf/'), 'Faculty Handbook PDFs');
+$menu->addURL(new URL('/abolished/'), 'Abolished policies');
 
 echo $menu;
 

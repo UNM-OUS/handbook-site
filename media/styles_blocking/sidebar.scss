@@ -88,6 +88,18 @@
     }
 }
 
+@media (min-width: 65rem) {
+    #content-wrapper {
+        grid-template-columns: [content] auto [sidebar] 25rem;
+    }
+}
+
+@media (min-width: 75rem) {
+    #content-wrapper {
+        grid-template-columns: [content] auto [sidebar] 35rem;
+    }
+}
+
 @media print {
     #content-sidebar {
         display: none !important;
