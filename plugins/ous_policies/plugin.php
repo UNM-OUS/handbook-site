@@ -3,10 +3,11 @@
 namespace DigraphCMS_Plugins\unmous\ous_policies;
 
 use DigraphCMS\Content\AbstractPage;
-use DigraphCMS\Content\Graph;
 use DigraphCMS\Content\Pages;
 use DigraphCMS\Context;
+use DigraphCMS\Cron\DeferredJob;
 use DigraphCMS\DB\AbstractMappedSelect;
+use DigraphCMS\DB\DB;
 use DigraphCMS\HTML\A;
 use DigraphCMS\HTML\DIV;
 use DigraphCMS\Plugins\AbstractPlugin;
@@ -15,13 +16,76 @@ use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 
 class Policies extends AbstractPlugin
 {
+    function onCron_daily()
+    {
+        /* Clean up old generated PDFs, only preserves yesterday, today, and the 1st of each month */
+        new DeferredJob(function () {
+            $yesterday = strtotime('yesterday');
+            $count = DB::query()
+                ->delete('generated_policy_pdf')
+                ->where('date_day <> 1')
+                ->where(
+                    '(date_year < ? OR date_month < ? OR date_day < ?)',
+                    [
+                        date('Y', $yesterday),
+                        date('n', $yesterday),
+                        date('j', $yesterday)
+                    ]
+                )
+                ->execute();
+            return "Cleaned up $count old generated policy PDFs";
+        });
+    }
+
+    /**
+     * Check hourly and try to create generated PDFs.
+     * 
+     * They check if they've already been generated for the day, so this should
+     * make them be generated once per day, pretty soon after midnight.
+     *
+     * @return void
+     */
+    public function onCron_hourly()
+    {
+        $today = DB::query()->from('generated_policy_pdf')
+            ->where(
+                'date_year = ? AND date_month = ? AND date_day = ?',
+                [date('Y'), date('n'), date('j')]
+            );
+        if (!$today->count()) {
+            new DeferredJob(function (DeferredJob $job) {
+                $job->spawn(function () {
+                    return PdfGenerator::generateSectionPDF('policies', 'UNM Faculty Handbook');
+                });
+                $job->spawn(function () {
+                    return PdfGenerator::generateSectionPDF('section_a', 'UNM Faculty Handbook - Section A');
+                });
+                $job->spawn(function () {
+                    return PdfGenerator::generateSectionPDF('section_b', 'UNM Faculty Handbook - Section B');
+                });
+                $job->spawn(function () {
+                    return PdfGenerator::generateSectionPDF('section_c', 'UNM Faculty Handbook - Section C');
+                });
+                $job->spawn(function () {
+                    return PdfGenerator::generateSectionPDF('section_d', 'UNM Faculty Handbook - Section D');
+                });
+                $job->spawn(function () {
+                    return PdfGenerator::generateSectionPDF('section_e', 'UNM Faculty Handbook - Section E');
+                });
+                $job->spawn(function () {
+                    return PdfGenerator::generateSectionPDF('section_f', 'UNM Faculty Handbook - Section F');
+                });
+                return "Spawned jobs to generate section PDFs";
+            });
+        }
+    }
 
     public function getAllPolicies(string $parentUUID = null): array
     {
         if (!$parentUUID) {
             $policies = Pages::select()
-                ->where('type = ?',['policy']);
-        }else {
+                ->where('type = ?', ['policy']);
+        } else {
             $policies = [];
         }
         return static::sortPages($policies);
