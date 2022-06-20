@@ -20,18 +20,11 @@ class Policies extends AbstractPlugin
     {
         /* Clean up old generated PDFs, only preserves yesterday, today, and the 1st of each month */
         new DeferredJob(function () {
-            $yesterday = strtotime('yesterday');
+            $cutoff = strtotime('yesterday');
             $count = DB::query()
                 ->delete('generated_policy_pdf')
                 ->where('date_day <> 1')
-                ->where(
-                    '(date_year < ? OR date_month < ? OR date_day < ?)',
-                    [
-                        date('Y', $yesterday),
-                        date('n', $yesterday),
-                        date('j', $yesterday)
-                    ]
-                )
+                ->where('created < ?', [$cutoff])
                 ->execute();
             return "Cleaned up $count old generated policy PDFs";
         });
@@ -55,28 +48,30 @@ class Policies extends AbstractPlugin
         if (!$today->count()) {
             new DeferredJob(function (DeferredJob $job) {
                 $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('policies', 'UNM Faculty Handbook');
+                    return PdfGenerator::generateSectionPDF('policies', 'UNM FHB');
                 });
                 $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_a', 'UNM Faculty Handbook - Section A');
+                    return PdfGenerator::generateSectionPDF('section_a', 'UNM FHB - Section A');
                 });
                 $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_b', 'UNM Faculty Handbook - Section B');
+                    return PdfGenerator::generateSectionPDF('section_b', 'UNM FHB - Section B');
                 });
                 $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_c', 'UNM Faculty Handbook - Section C');
+                    return PdfGenerator::generateSectionPDF('section_c', 'UNM FHB - Section C');
                 });
                 $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_d', 'UNM Faculty Handbook - Section D');
+                    return PdfGenerator::generateSectionPDF('section_d', 'UNM FHB - Section D');
                 });
                 $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_e', 'UNM Faculty Handbook - Section E');
+                    return PdfGenerator::generateSectionPDF('section_e', 'UNM FHB - Section E');
                 });
                 $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_f', 'UNM Faculty Handbook - Section F');
+                    return PdfGenerator::generateSectionPDF('section_f', 'UNM FHB - Section F');
                 });
                 return "Spawned jobs to generate section PDFs";
             });
+        } else {
+            return "PDFs already generated today";
         }
     }
 
@@ -101,7 +96,7 @@ class Policies extends AbstractPlugin
 
     public function onShortCode_policytoc(ShortcodeInterface $s): ?string
     {
-        $page = Pages::get($s->getBbCode() ?? Context::pageUUID());
+        $page = Pages::get($s->getBbCode() ?? Context::pageUUID() ?? '');
         if (!$page) return null;
         $toc = new PolicyTableOfContents($page, $s->getParameter('prefix', ''));
         return $toc->__toString();
