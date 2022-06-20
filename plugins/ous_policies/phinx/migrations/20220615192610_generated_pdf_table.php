@@ -16,7 +16,7 @@ final class GeneratedPdfTable extends AbstractMigration
             ->addColumn('date_day', 'integer')
             ->addColumn('filename', 'string', ['length' => 250])
             ->addColumn('created', 'integer')
-            ->addColumn('data', 'blob')
+            ->addColumn('data', 'longblob')
             ->addForeignKey(['page_uuid'], 'page', ['uuid'])
             ->addIndex('uuid', ['unique' => true])
             ->addIndex('date_year')
