@@ -11,9 +11,6 @@ use DigraphCMS\DB\DB;
 use DigraphCMS\Media\DeferredFile;
 use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
-use DigraphCMS_Plugins\unmous\ous_policies\PdfGenerator;
-
-// PdfGenerator::generateSectionPDF('policies', 'UNM FHB');
 
 Context::fields()['template-sidebar'] = true;
 

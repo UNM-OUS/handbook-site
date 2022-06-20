@@ -17,7 +17,7 @@ class PdfGenerator
     {
         $page = Pages::get($slug_or_uuid);
         if (!$page) throw new \Exception("Couldn't generate PDF from section, slug or UUID \"$slug_or_uuid\" not found");
-        DB::query()->insertInto('generated_policy_pdf',[
+        DB::query()->insertInto('generated_policy_pdf', [
             'uuid' => Digraph::uuid(),
             'page_uuid' => $page->uuid(),
             'date_year' => date('Y'),
@@ -32,6 +32,7 @@ class PdfGenerator
 
     public static function generateSectionPDFData(AbstractPage $page, string $title, $skip = []): string
     {
+        ini_set('memory_limit', '1024M');
         $skip = array_filter(array_map(
             function ($slug_or_uuid) {
                 if ($page = Pages::get($slug_or_uuid)) return $page->uuid();
