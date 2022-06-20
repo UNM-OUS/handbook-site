@@ -32,7 +32,10 @@ class PdfGenerator
 
     public static function generateSectionPDFData(AbstractPage $page, string $title, $skip = []): string
     {
+        // take as much memory and time as needed
         ini_set('memory_limit', '1024M');
+        set_time_limit(600);
+        // prepare skip list
         $skip = array_filter(array_map(
             function ($slug_or_uuid) {
                 if ($page = Pages::get($slug_or_uuid)) return $page->uuid();
@@ -40,6 +43,7 @@ class PdfGenerator
             },
             $skip
         ));
+        // prepare html and turn it into a pdf
         $html = static::generateSectionCoverPageHTML($page, $title);
         $html .= static::generateSectionHTML($page, $skip);
         $html = Templates::render('policy/pdf-section.php', ['body' => $html]);
