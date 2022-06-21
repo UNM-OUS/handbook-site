@@ -15,9 +15,6 @@ use DigraphCMS\Media\Media;
         <?php echo Context::fields()['page.name'] ?? 'Untitled'; ?>
         :: <?php echo Context::fields()['site.name']; ?>
     </title>
-    <style>
-        <?php echo Media::get('/styles_pdf/*.css')->content(); ?>
-    </style>
 </head>
 
 <body>
