@@ -69,13 +69,13 @@ class PdfGenerator
         echo "<h1>" . $title . "</h1>";
         echo "<p><small>This PDF was generated " . Format::datetime(time(), true, true) . "</small></p>";
         echo "<p><small>For the most recent copy visit <a href='https://handbook.unm.edu/pdf/'>handbook.unm.edu/pdf</a></small></p>";
-        echo '<hr>';
-        echo '<h2>Table of contents</h2>';
+        echo '<h2 style="page-break-before:always;">Table of contents</h2>';
         echo '<table class="table-of-contents">';
         echo '<tr><th>Policy</th><th>Page</th></tr>';
         echo static::generateSectionTocHTML($page, $skip);
         echo '</table>';
         echo '</div>';
+        echo '<script type="text/php">$GLOBALS["max_objects"] = count($pdf->get_cpdf()->objects);</script>';
         return ob_get_clean();
     }
 
@@ -111,7 +111,7 @@ class PdfGenerator
         if ($page instanceof PolicyPage && !in_array($page->uuid(), $skip)) {
             echo "<div class='pdf-section' id='policy-" . $page->uuid() . "'>";
             printf(
-                '<script type="text/php">$GLOBALS["table-of-contents"]["%s"] = $pdf->get_page_number();</script>',
+                '<script type="text/php">$GLOBALS["toc"]["%s"] = $pdf->get_page_number();</script>',
                 $page->uuid()
             );
             Context::begin();

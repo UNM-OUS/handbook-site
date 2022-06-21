@@ -22,20 +22,20 @@ use DigraphCMS\Media\Media;
 
 <body>
     <script type="text/php">
-        $GLOBALS['table-of-contents'] = [];
-        $GLOBALS['pdf'] = $pdf->open_object();
+        $GLOBALS['toc'] = [];
+        $GLOBALS['max_objects'] = 0;
     </script>
     <?php echo Context::fields()['body']; ?>
     <script type="text/php">
-        foreach ($GLOBALS['table-of-contents'] as $id => $page) {
-            $pdf->get_cpdf()->objects[$GLOBALS['pdf']]['c'] = str_replace( '%%'.$id.'%%' , $page , $pdf->get_cpdf()->objects[$GLOBALS['pdf']]['c'] );
+        for ($i = 0; $i <= $GLOBALS['max_objects']; $i++) {
+            if (!array_key_exists($i, $pdf->get_cpdf()->objects)) continue;
+            $object = $pdf->get_cpdf()->objects[$i];
+            if (!array_key_exists('c', $object)) continue;
+            foreach ($GLOBALS['toc'] as $id => $page) {
+                $object['c'] = str_replace( '%%'.$id.'%%' , $page , $object['c'] );
+            }
+            $pdf->get_cpdf()->objects[$i] = $object;
         }
-        $pdf->page_script('
-            if ($PAGE_NUM==1 ) {
-                $pdf->add_object($GLOBALS["pdf"],"add");
-                $pdf->stop_object($GLOBALS["pdf"]);
-            } 
-        ');
     </script>
 </body>
 
