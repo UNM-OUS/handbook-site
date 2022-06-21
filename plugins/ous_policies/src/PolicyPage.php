@@ -152,7 +152,7 @@ class PolicyPage extends AbstractPage
         }
         // fall back on parent tools for non-body rich content
         if ($index == 'body') {
-            return new RichContent("<div class='notification notification--notice'>No content found, please check back later.</div>");
+            return new RichContent("<div class='notification notification--notice'>No content found for " . $this->name() . ", please check back later.</div>");
         } else {
             return parent::richContent($index, $content);
         }

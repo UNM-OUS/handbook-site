@@ -70,6 +70,7 @@ if (Context::arg('show_minor') || Context::arg('only_policy')) {
 }
 
 $revisions = Revisions::select()
+    ->where('state = "published"')
     ->where('effective is not null')
     ->where('effective <= ?', [date('Y-m-d')])
     ->order('effective DESC');

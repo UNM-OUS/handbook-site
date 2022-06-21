@@ -33,12 +33,12 @@ $form->button()->setText('Save revision');
 $metadata = new FIELDSET('Metadata');
 
 $state = (new RevisionStateField)
-    ->setDefault($revision->state())
+    ->setDefault($revision->state()->__toString())
     ->setRequired(true);
 $metadata->addChild($state);
 
 $type = (new RevisionTypeField())
-    ->setDefault($revision->type())
+    ->setDefault($revision->type()->__toString())
     ->setRequired(true);
 $metadata->addChild($type);
 
