@@ -26,6 +26,17 @@ use DigraphCMS\Media\Media;
         $GLOBALS['max_objects'] = 0;
     </script>
     <?php echo Context::fields()['body']; ?>
+    <script type="text/php">
+        for ($i = 0; $i <= $GLOBALS['max_objects']; $i++) {
+            if (!array_key_exists($i, $pdf->get_cpdf()->objects)) continue;
+            $object = $pdf->get_cpdf()->objects[$i];
+            if (!array_key_exists('c', $object)) continue;
+            foreach ($GLOBALS['toc'] as $id => $page) {
+                $object['c'] = str_replace( '%%'.$id.'%%' , $page , $object['c'] );
+            }
+            $pdf->get_cpdf()->objects[$i] = $object;
+        }
+    </script>
 </body>
 
 </html>
