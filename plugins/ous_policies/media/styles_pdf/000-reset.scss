@@ -96,16 +96,15 @@ table.table-of-contents {
     td,
     th {
         border: 0;
-        border-bottom: 1px dotted #999;
         text-align: left;
         padding: 2pt 0;
     }
 
-    tr:last-child {
+    tr {
+        border-bottom: 1px dotted #999;
+    }
 
-        td,
-        th {
-            border-bottom: 0;
-        }
+    tr:last-child {
+        border-bottom: 0;
     }
 }
