@@ -48,7 +48,7 @@ class Policies extends AbstractPlugin
         if (!$today->count()) {
             new DeferredJob(function (DeferredJob $job) {
                 $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('policies', 'UNM FHB');
+                    return PdfGenerator::generateSectionPDF('policies', 'UNM Faculty Handbook');
                 });
                 $job->spawn(function () {
                     return PdfGenerator::generateSectionPDF('section_a', 'UNM FHB - Section A');

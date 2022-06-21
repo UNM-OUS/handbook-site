@@ -71,7 +71,7 @@ class PdfGenerator
         echo "<p><small>For the most recent copy visit <a href='https://handbook.unm.edu/pdf/'>handbook.unm.edu/pdf</a></small></p>";
         echo '<h2 style="page-break-before:always;">Table of contents</h2>';
         echo '<table class="table-of-contents">';
-        echo '<tr><th>Policy</th><th>Page</th></tr>';
+        // echo '<tr><th>Policy</th><th width="1%">Page</th></tr>';
         echo static::generateSectionTocHTML($page, $skip);
         echo '</table>';
         echo '</div>';
