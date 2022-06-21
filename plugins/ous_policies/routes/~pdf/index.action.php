@@ -11,14 +11,16 @@ use DigraphCMS\DB\DB;
 use DigraphCMS\Media\DeferredFile;
 use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
+use DigraphCMS\UI\Notifications;
 
 Context::fields()['template-sidebar'] = true;
 
 // recent PDFs
-
 $query = DB::query()->from('generated_policy_pdf')
-    ->where('created >= ?', [strtotime('yesterday')]);
-if (!$query->count()) return;
+    ->where('date_year = ?', [date('Y')])
+    ->where('date_month = ?', [date('n')])
+    ->where('date_day = ?', [date('j')])
+    ->order('filename asc');
 
 $table = new QueryTable(
     $query,
@@ -32,12 +34,14 @@ $table = new QueryTable(
     },
     []
 );
-echo $table;
+if ($query->count()) echo $table;
+else Notifications::printWarning('Today\'s PDFs have not been generated yet. Please check back later. They should be finished within an hour or two after midnight each day.');
 
 // old PDFs
 
 $query = DB::query()->from('generated_policy_pdf')
-    ->where('date_day = 1');
+    ->where('date_day = 1')
+    ->order('date_year desc, date_month desc, date_day desc, filename asc');
 if (!$query->count()) return;
 
 $table = new QueryTable(
@@ -54,5 +58,5 @@ $table = new QueryTable(
     []
 );
 echo "<h2>Archived copies</h2>";
-echo '<p>A copy of each PDF from the first of each month is preserved indefinitely, for archival purposes.</p>';
+echo '<p>PDFs are periodically automatically archived, and all archived copies can be browsed here.</p>';
 echo $table;

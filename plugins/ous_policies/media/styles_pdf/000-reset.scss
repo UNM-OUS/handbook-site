@@ -1,6 +1,58 @@
+@page {
+    margin: 0.85in 0.5in;
+    font-size: 10pt;
+}
+
+#header,
+#footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    font-size: 8pt;
+    padding: 5pt;
+    background: #fafafa;
+    color: #666;
+    text-align: center;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+td,
+th {
+    border: 1px solid #ddd;
+    padding: 5pt;
+    border-left-style: dotted;
+    border-right-style: dotted;
+
+    >*:first-child {
+        margin-top: 0;
+    }
+
+    >*:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.page-number {
+    &:before {
+        content: counter(page);
+    }
+}
+
+#header {
+    top: -0.35in;
+}
+
+#footer {
+    bottom: -0.35in;
+}
+
 .pdf-section {
     page-break-before: always;
-    > h1:first-child {
+
+    >h1:first-child {
         margin-top: 0;
     }
 }
@@ -13,4 +65,20 @@ body>.pdf-section:first-child {
     box-sizing: border-box;
     width: auto;
     max-width: none;
+}
+
+table.table-of-contents {
+    width: 100%;
+
+    a {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    td,
+    th {
+        border: 0;
+        border-bottom: 1px dotted #999;
+        text-align: left;
+    }
 }

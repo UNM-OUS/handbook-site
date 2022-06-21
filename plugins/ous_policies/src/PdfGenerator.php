@@ -7,9 +7,11 @@ use DigraphCMS\Content\Pages;
 use DigraphCMS\Context;
 use DigraphCMS\DB\DB;
 use DigraphCMS\Digraph;
+use DigraphCMS\Media\Media;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Templates;
 use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class PdfGenerator
 {
@@ -44,23 +46,57 @@ class PdfGenerator
             $skip
         ));
         // prepare html and turn it into a pdf
-        $html = static::generateSectionCoverPageHTML($page, $title);
+        $html = static::generateSectionCoverPageHTML($page, $title, $skip);
         $html .= static::generateSectionHTML($page, $skip);
         $html = Templates::render('policy/pdf-section.php', ['body' => $html]);
-        $dompdf = new Dompdf();
+        $options = new Options();
+        $options->setIsPhpEnabled(true);
+        $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html, "UTF-8");
         $dompdf->setPaper('letter', 'portrait');
         $dompdf->render();
         return $dompdf->output();
     }
 
-    protected static function generateSectionCoverPageHTML(AbstractPage $page, string $title): string
+    protected static function generateSectionCoverPageHTML(AbstractPage $page, string $title, $skip = []): string
     {
+        $title = $title ?? $page->name();
         ob_start();
-        echo "<div class='pdf-section pdf-section--cover-page'>";
-        echo "<h1>" . ($title ?? $page->name()) . "</h1>";
-        echo "<p>Generated " . Format::datetime(time(), false, true) . "</p>";
-        echo "</div>";
+        echo '<div id="header">' . $title . ' - ' . Format::datetime(time(), false, true) . '</div>';
+        echo '<div id="footer">page <span class="page-number"></span></div>';
+        echo '<div class="pdf-section">';
+        printf('<p><img src="data:image/image/jpg;base64,%s" style="width:7.5in;"/></p>', base64_encode(Media::get('/hero.jpg')->content()));
+        echo "<h1>" . $title . "</h1>";
+        echo "<p><small>This PDF was generated " . Format::datetime(time(), true, true) . "</small></p>";
+        echo "<p><small>For the most recent copy visit <a href='https://handbook.unm.edu/pdf/'>handbook.unm.edu/pdf</a></small></p>";
+        echo '<hr>';
+        echo '<h2>Table of contents</h2>';
+        echo '<table class="table-of-contents">';
+        echo '<tr><th>Policy</th><th>Page</th></tr>';
+        echo static::generateSectionTocHTML($page, $skip);
+        echo '</table>';
+        echo '</div>';
+        return ob_get_clean();
+    }
+
+    protected static function generateSectionTocHTML(AbstractPage $page, $skip = [], &$seen = []): string
+    {
+        // avoid cycles
+        if (in_array($page->uuid(), $seen)) return '';
+        $seen[] = $page->uuid();
+        // start output buffering
+        ob_start();
+        // prepare output if this one isn't to be skipped
+        if ($page instanceof PolicyPage && !in_array($page->uuid(), $skip)) {
+            echo "<tr>";
+            echo '<td><a href="#policy-' . $page->uuid() . '">' . $page->name() . '</a></td>';
+            echo "<td>%%" . $page->uuid() . "%%</td>";
+            echo "</tr>";
+        }
+        // recurse, even for skipped
+        foreach ($page->children() as $child) {
+            echo static::generateSectionTocHTML($child, $skip, $seen);
+        }
         return ob_get_clean();
     }
 
@@ -72,12 +108,15 @@ class PdfGenerator
         // start output buffering
         ob_start();
         // prepare output if this one isn't to be skipped
-        if (!in_array($page->uuid(), $skip)) {
-            echo "<div class='pdf-section'>";
+        if ($page instanceof PolicyPage && !in_array($page->uuid(), $skip)) {
+            echo "<div class='pdf-section' id='policy-" . $page->uuid() . "'>";
+            printf(
+                '<script type="text/php">$GLOBALS["table-of-contents"]["%s"] = $pdf->get_page_number();</script>',
+                $page->uuid()
+            );
             Context::begin();
             Context::page($page);
-            if (method_exists($page, 'pdfBody')) echo $page->pdfBody();
-            else echo $page->richContent('body');
+            echo $page->richContent('body');
             Context::end();
             echo "</div>";
         }
