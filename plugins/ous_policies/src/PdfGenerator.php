@@ -11,6 +11,8 @@ use DigraphCMS\Digraph;
 use DigraphCMS\Media\Media;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Templates;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class PdfGenerator
 {
@@ -43,7 +45,12 @@ class PdfGenerator
         $html = static::generateSectionCoverPageHTML($page, $title);
         $html .= static::generateSectionHTML($page);
         $html = Templates::render('policy/pdf-section.php', ['body' => $html]);
-        return $html;
+        $options = new Options();
+        $options->setIsPhpEnabled(true);
+        $dompdf = new Dompdf($options);
+        $dompdf->loadHtml($html, "UTF-8");
+        $dompdf->setPaper('letter', 'portrait');
+        return $dompdf->render();
     }
 
     protected static function generateSectionCoverPageHTML(AbstractPage $page, string $title): string

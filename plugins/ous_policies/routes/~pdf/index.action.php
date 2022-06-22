@@ -12,8 +12,6 @@ use DigraphCMS\Media\DeferredFile;
 use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Notifications;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 
 Context::fields()['template-sidebar'] = true;
 
@@ -28,14 +26,7 @@ $table = new QueryTable(
     $query,
     function (array $row): array {
         $file = new DeferredFile($row['filename'], function (DeferredFile $file) use ($row) {
-            $html = gzdecode($row['data']);
-            $options = new Options();
-            $options->setIsPhpEnabled(true);
-            $dompdf = new Dompdf($options);
-            $dompdf->loadHtml($html, "UTF-8");
-            $dompdf->setPaper('letter', 'portrait');
-            $dompdf->render();
-            file_put_contents($file->path(), $dompdf->output());
+            file_put_contents($file->path(), gzdecode($row['data']));
         }, $row['uuid']);
         return [
             sprintf('<a href="%s">%s</a>', $file->url(), $file->filename())
@@ -63,14 +54,7 @@ $table = new QueryTable(
     $query,
     function (array $row): array {
         $file = new DeferredFile($row['filename'], function (DeferredFile $file) use ($row) {
-            $html = gzdecode($row['data']);
-            $options = new Options();
-            $options->setIsPhpEnabled(true);
-            $dompdf = new Dompdf($options);
-            $dompdf->loadHtml($html, "UTF-8");
-            $dompdf->setPaper('letter', 'portrait');
-            $dompdf->render();
-            file_put_contents($file->path(), $dompdf->output());
+            file_put_contents($file->path(), gzdecode($row['data']));
         }, $row['uuid']);
         return [
             Format::date($row['created']),
