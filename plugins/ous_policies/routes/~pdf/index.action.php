@@ -12,6 +12,8 @@ use DigraphCMS\Media\DeferredFile;
 use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Notifications;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 Context::fields()['template-sidebar'] = true;
 
@@ -26,7 +28,14 @@ $table = new QueryTable(
     $query,
     function (array $row): array {
         $file = new DeferredFile($row['filename'], function (DeferredFile $file) use ($row) {
-            file_put_contents($file->path(), $row['data']);
+            $html = gzdecode($row['data']);
+            $options = new Options();
+            $options->setIsPhpEnabled(true);
+            $dompdf = new Dompdf($options);
+            $dompdf->loadHtml($html, "UTF-8");
+            $dompdf->setPaper('letter', 'portrait');
+            $dompdf->render();
+            file_put_contents($file->path(), $dompdf->output());
         }, $row['uuid']);
         return [
             sprintf('<a href="%s">%s</a>', $file->url(), $file->filename())
@@ -36,10 +45,10 @@ $table = new QueryTable(
 );
 if (!$query->count()) {
     Notifications::printWarning('Today\'s PDFs have not been generated yet. Please check back later.');
-}elseif ($query->count() < 7) {
+} elseif ($query->count() < 7) {
     Notifications::printNotice('Today\'s PDFs have not all been generated yet. Please check back later.');
     echo $table;
-}else {
+} else {
     echo $table;
 }
 
@@ -54,7 +63,14 @@ $table = new QueryTable(
     $query,
     function (array $row): array {
         $file = new DeferredFile($row['filename'], function (DeferredFile $file) use ($row) {
-            file_put_contents($file->path(), $row['data']);
+            $html = gzdecode($row['data']);
+            $options = new Options();
+            $options->setIsPhpEnabled(true);
+            $dompdf = new Dompdf($options);
+            $dompdf->loadHtml($html, "UTF-8");
+            $dompdf->setPaper('letter', 'portrait');
+            $dompdf->render();
+            file_put_contents($file->path(), $dompdf->output());
         }, $row['uuid']);
         return [
             Format::date($row['created']),

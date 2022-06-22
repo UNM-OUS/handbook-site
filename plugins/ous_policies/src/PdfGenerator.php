@@ -11,8 +11,6 @@ use DigraphCMS\Digraph;
 use DigraphCMS\Media\Media;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Templates;
-use Dompdf\Dompdf;
-use Dompdf\Options;
 
 class PdfGenerator
 {
@@ -30,48 +28,42 @@ class PdfGenerator
             'date_day' => date('j'),
             'filename' => $title . ' - ' . date('Y-m-d') . '.pdf',
             'created' => time(),
-            'data' => static::generateSectionPDFData($page, $title)
+            'data' => gzencode(static::generateSectionPDFSource($page, $title), 9)
         ])->execute();
         return "Generated PDF of " . $page->name();
     }
 
-    public static function generateSectionPDFData(AbstractPage $page, string $title): string
+    public static function generateSectionPDFSource(AbstractPage $page, string $title): string
     {
         // take as much memory and time as needed
         ini_set('memory_limit', '2048M');
-        set_time_limit(600);
+        set_time_limit(120);
         static::$startTime = time();
         // prepare html and turn it into a pdf
         $html = static::generateSectionCoverPageHTML($page, $title);
         $html .= static::generateSectionHTML($page);
         $html = Templates::render('policy/pdf-section.php', ['body' => $html]);
-        $options = new Options();
-        $options->setIsPhpEnabled(true);
-        $dompdf = new Dompdf($options);
-        $dompdf->loadHtml($html, "UTF-8");
-        $dompdf->setPaper('letter', 'portrait');
-        $dompdf->render();
-        return $dompdf->output();
+        return $html;
     }
 
     protected static function generateSectionCoverPageHTML(AbstractPage $page, string $title): string
     {
         $title = $title ?? $page->name();
-        ob_start();
-        echo '<div id="header">' . $title . ' - ' . Format::datetime(time(), false, true) . '</div>';
-        echo '<div id="footer">page <span class="page-number"></span></div>';
-        echo '<div class="pdf-section">';
-        printf('<p><img src="data:image/image/jpg;base64,%s" style="width:7.5in;"/></p>', base64_encode(Media::get('/hero.jpg')->content()));
-        echo "<h1>" . $title . "</h1>";
-        echo "<p><small>This PDF was generated " . Format::datetime(time(), true, true) . "</small></p>";
-        echo "<p><small>For the most recent copy visit <a href='https://handbook.unm.edu/pdf/'>handbook.unm.edu/pdf</a></small></p>";
-        echo '<h2 style="page-break-before:always;">Table of contents</h2>';
-        echo '<table class="table-of-contents">';
-        echo static::generateSectionTocHTML($page);
-        echo '</table>';
-        echo '</div>';
-        echo '<script type="text/php">$GLOBALS["max_objects"] = count($pdf->get_cpdf()->objects);</script>';
-        return ob_get_clean();
+        $out = '';
+        $out .= '<div id="header">' . $title . ' - ' . Format::datetime(time(), false, true) . '</div>';
+        $out .= '<div id="footer">page <span class="page-number"></span></div>';
+        $out .= '<div class="pdf-section">';
+        $out .= sprintf('<p><img src="data:image/image/jpg;base64,%s" style="width:7.5in;"/></p>', base64_encode(Media::get('/hero.jpg')->content()));
+        $out .= "<h1>" . $title . "</h1>";
+        $out .= "<p><small>This PDF was generated " . Format::datetime(time(), true, true) . "</small></p>";
+        $out .= "<p><small>For the most recent copy visit <a href='https://handbook.unm.edu/pdf/'>handbook.unm.edu/pdf</a></small></p>";
+        $out .= '<h2 style="page-break-before:always;">Table of contents</h2>';
+        $out .= '<table class="table-of-contents">';
+        $out .= static::generateSectionTocHTML($page);
+        $out .= '</table>';
+        $out .= '</div>';
+        $out .= '<script type="text/php">$GLOBALS["max_objects"] = count($pdf->get_cpdf()->objects);</script>';
+        return $out;
     }
 
     protected static function generateSectionTocHTML(AbstractPage $page): string
@@ -79,20 +71,19 @@ class PdfGenerator
         return Cache::get(
             'policy/pdf/toc/' . $page->uuid(),
             function () use ($page) {
-                // start output buffering
-                ob_start();
+                $out = '';
                 // prepare output if this one isn't to be skipped
                 if ($page instanceof PolicyPage) {
-                    echo "<tr>";
-                    echo '<td><a href="#policy-' . $page->uuid() . '">' . $page->name() . '</a></td>';
-                    echo "<td>%%" . $page->uuid() . "%%</td>";
-                    echo "</tr>";
+                    $out .= "<tr>";
+                    $out .= '<td><a href="#policy-' . $page->uuid() . '">' . $page->name() . '</a></td>';
+                    $out .= "<td>%%" . $page->uuid() . "%%</td>";
+                    $out .= "</tr>";
                 }
                 // recurse, even for skipped
                 foreach ($page->children() as $child) {
-                    echo static::generateSectionTocHTML($child, $seen);
+                    $out .= static::generateSectionTocHTML($child, $seen);
                 }
-                return ob_get_clean();
+                return $out;
             },
             12 * 3600
         );
@@ -104,16 +95,15 @@ class PdfGenerator
         return Cache::get(
             'policy/pdf/section/' . $page->uuid(),
             function () use ($page) {
-                // start output buffering
-                ob_start();
+                $out = '';
                 // prepare output if this one isn't to be skipped
                 if ($page instanceof PolicyPage) {
-                    echo "<div class='pdf-section' id='policy-" . $page->uuid() . "'>";
-                    printf(
+                    $out .= "<div class='pdf-section' id='policy-" . $page->uuid() . "'>";
+                    $out .= sprintf(
                         '<script type="text/php">$GLOBALS["toc"]["%s"] = $pdf->get_page_number();</script>',
                         $page->uuid()
                     );
-                    echo Cache::get(
+                    $out .= Cache::get(
                         'policy/pdf/body/' . $page->uuid(),
                         function () use ($page) {
                             Context::begin();
@@ -124,13 +114,13 @@ class PdfGenerator
                         },
                         12 * 3600
                     );
-                    echo "</div>";
+                    $out .= "</div>";
                 }
                 // recurse, even for skipped
                 foreach ($page->children() as $child) {
-                    echo static::generateSectionHTML($child, $seen);
+                    $out .= static::generateSectionHTML($child, $seen);
                 }
-                return ob_get_clean();
+                return $out;
             },
             12 * 3600
         );
