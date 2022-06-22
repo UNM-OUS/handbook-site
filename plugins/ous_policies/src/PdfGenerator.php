@@ -2,6 +2,7 @@
 
 namespace DigraphCMS_Plugins\unmous\ous_policies;
 
+use DigraphCMS\Cache\Cache;
 use DigraphCMS\Content\AbstractPage;
 use DigraphCMS\Content\Pages;
 use DigraphCMS\Context;
@@ -15,7 +16,7 @@ use Dompdf\Options;
 
 class PdfGenerator
 {
-    public static function generateSectionPDF(string $slug_or_uuid, string $title, $skip = []): string
+    public static function generateSectionPDF(string $slug_or_uuid, string $title): string
     {
         $page = Pages::get($slug_or_uuid);
         if (!$page) throw new \Exception("Couldn't generate PDF from section, slug or UUID \"$slug_or_uuid\" not found");
@@ -27,27 +28,19 @@ class PdfGenerator
             'date_day' => date('j'),
             'filename' => $title . ' - ' . date('Y-m-d') . '.pdf',
             'created' => time(),
-            'data' => static::generateSectionPDFData($page, $title, $skip)
+            'data' => static::generateSectionPDFData($page, $title)
         ])->execute();
         return "Generated PDF of " . $page->name();
     }
 
-    public static function generateSectionPDFData(AbstractPage $page, string $title, $skip = []): string
+    public static function generateSectionPDFData(AbstractPage $page, string $title): string
     {
         // take as much memory and time as needed
-        ini_set('memory_limit', '1024M');
-        set_time_limit(600);
-        // prepare skip list
-        $skip = array_filter(array_map(
-            function ($slug_or_uuid) {
-                if ($page = Pages::get($slug_or_uuid)) return $page->uuid();
-                else return false;
-            },
-            $skip
-        ));
+        ini_set('memory_limit', '2048M');
+        set_time_limit(300);
         // prepare html and turn it into a pdf
-        $html = static::generateSectionCoverPageHTML($page, $title, $skip);
-        $html .= static::generateSectionHTML($page, $skip);
+        $html = static::generateSectionCoverPageHTML($page, $title);
+        $html .= static::generateSectionHTML($page);
         $html = Templates::render('policy/pdf-section.php', ['body' => $html]);
         $options = new Options();
         $options->setIsPhpEnabled(true);
@@ -58,7 +51,7 @@ class PdfGenerator
         return $dompdf->output();
     }
 
-    protected static function generateSectionCoverPageHTML(AbstractPage $page, string $title, $skip = []): string
+    protected static function generateSectionCoverPageHTML(AbstractPage $page, string $title): string
     {
         $title = $title ?? $page->name();
         ob_start();
@@ -71,59 +64,76 @@ class PdfGenerator
         echo "<p><small>For the most recent copy visit <a href='https://handbook.unm.edu/pdf/'>handbook.unm.edu/pdf</a></small></p>";
         echo '<h2 style="page-break-before:always;">Table of contents</h2>';
         echo '<table class="table-of-contents">';
-        // echo '<tr><th>Policy</th><th width="1%">Page</th></tr>';
-        echo static::generateSectionTocHTML($page, $skip);
+        echo static::generateSectionTocHTML($page);
         echo '</table>';
         echo '</div>';
         echo '<script type="text/php">$GLOBALS["max_objects"] = count($pdf->get_cpdf()->objects);</script>';
         return ob_get_clean();
     }
 
-    protected static function generateSectionTocHTML(AbstractPage $page, $skip = [], &$seen = []): string
+    protected static function generateSectionTocHTML(AbstractPage $page, &$seen = []): string
     {
-        // avoid cycles
-        if (in_array($page->uuid(), $seen)) return '';
-        $seen[] = $page->uuid();
-        // start output buffering
-        ob_start();
-        // prepare output if this one isn't to be skipped
-        if ($page instanceof PolicyPage && !in_array($page->uuid(), $skip)) {
-            echo "<tr>";
-            echo '<td><a href="#policy-' . $page->uuid() . '">' . $page->name() . '</a></td>';
-            echo "<td>%%" . $page->uuid() . "%%</td>";
-            echo "</tr>";
-        }
-        // recurse, even for skipped
-        foreach ($page->children() as $child) {
-            echo static::generateSectionTocHTML($child, $skip, $seen);
-        }
-        return ob_get_clean();
+        return Cache::get(
+            'policy/pdf/toc/' . md5(serialize([
+                $page->uuid(),
+                $seen
+            ])),
+            function () use ($page, &$seen) {
+                // avoid cycles
+                if (in_array($page->uuid(), $seen)) return '';
+                $seen[] = $page->uuid();
+                // start output buffering
+                ob_start();
+                // prepare output if this one isn't to be skipped
+                if ($page instanceof PolicyPage) {
+                    echo "<tr>";
+                    echo '<td><a href="#policy-' . $page->uuid() . '">' . $page->name() . '</a></td>';
+                    echo "<td>%%" . $page->uuid() . "%%</td>";
+                    echo "</tr>";
+                }
+                // recurse, even for skipped
+                foreach ($page->children() as $child) {
+                    echo static::generateSectionTocHTML($child, $seen);
+                }
+                return ob_get_clean();
+            },
+            12 * 3600
+        );
     }
 
-    protected static function generateSectionHTML(AbstractPage $page, $skip = [], &$seen = []): string
+    protected static function generateSectionHTML(AbstractPage $page, &$seen = []): string
     {
-        // avoid cycles
-        if (in_array($page->uuid(), $seen)) return '';
-        $seen[] = $page->uuid();
-        // start output buffering
-        ob_start();
-        // prepare output if this one isn't to be skipped
-        if ($page instanceof PolicyPage && !in_array($page->uuid(), $skip)) {
-            echo "<div class='pdf-section' id='policy-" . $page->uuid() . "'>";
-            printf(
-                '<script type="text/php">$GLOBALS["toc"]["%s"] = $pdf->get_page_number();</script>',
-                $page->uuid()
-            );
-            Context::begin();
-            Context::page($page);
-            echo $page->richContent('body');
-            Context::end();
-            echo "</div>";
-        }
-        // recurse, even for skipped
-        foreach ($page->children() as $child) {
-            echo static::generateSectionHTML($child, $skip, $seen);
-        }
-        return ob_get_clean();
+        return Cache::get(
+            'policy/pdf/section/' . md5(serialize([
+                $page->uuid(),
+                $seen
+            ])),
+            function () use ($page, &$seen) {
+                // avoid cycles
+                if (in_array($page->uuid(), $seen)) return '';
+                $seen[] = $page->uuid();
+                // start output buffering
+                ob_start();
+                // prepare output if this one isn't to be skipped
+                if ($page instanceof PolicyPage) {
+                    echo "<div class='pdf-section' id='policy-" . $page->uuid() . "'>";
+                    printf(
+                        '<script type="text/php">$GLOBALS["toc"]["%s"] = $pdf->get_page_number();</script>',
+                        $page->uuid()
+                    );
+                    Context::begin();
+                    Context::page($page);
+                    echo $page->richContent('body');
+                    Context::end();
+                    echo "</div>";
+                }
+                // recurse, even for skipped
+                foreach ($page->children() as $child) {
+                    echo static::generateSectionHTML($child, $seen);
+                }
+                return ob_get_clean();
+            },
+            12 * 3600
+        );
     }
 }

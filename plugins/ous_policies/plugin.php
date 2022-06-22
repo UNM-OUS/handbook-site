@@ -45,33 +45,39 @@ class Policies extends AbstractPlugin
                 'date_year = ? AND date_month = ? AND date_day = ?',
                 [date('Y'), date('n'), date('j')]
             );
-        if (!$today->count()) {
+        if ($today->count() < 7) {
             new DeferredJob(function (DeferredJob $job) {
-                $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('policies', 'UNM Faculty Handbook');
-                });
-                $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_a', 'UNM FHB - Section A');
-                });
-                $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_b', 'UNM FHB - Section B');
-                });
-                $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_c', 'UNM FHB - Section C');
-                });
-                $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_d', 'UNM FHB - Section D');
-                });
-                $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_e', 'UNM FHB - Section E');
-                });
-                $job->spawn(function () {
-                    return PdfGenerator::generateSectionPDF('section_f', 'UNM FHB - Section F');
-                });
-                return "Spawned jobs to generate section PDFs";
+                $today = DB::query()->from('generated_policy_pdf')
+                    ->where(
+                        'date_year = ? AND date_month = ? AND date_day = ?',
+                        [date('Y'), date('n'), date('j')]
+                    );
+                $pages = [
+                    'policies' => 'UNM Faculty Handbook',
+                    'section_a' => 'UNM FHB - Section A',
+                    'section_b' => 'UNM FHB - Section B',
+                    'section_c' => 'UNM FHB - Section C',
+                    'section_d' => 'UNM FHB - Section D',
+                    'section_e' => 'UNM FHB - Section E',
+                    'section_f' => 'UNM FHB - Section F',
+                ];
+                $spawned = 0;
+                foreach ($pages as $slug => $title) {
+                    if ($page = Pages::get($slug)) {
+                        $check = clone ($today);
+                        $check->where('page_uuid = ?', [$page->uuid()]);
+                        if (!$check->count()) {
+                            $spawned++;
+                            $job->spawn(function () use ($slug, $title) {
+                                return PdfGenerator::generateSectionPDF($slug, $title);
+                            });
+                        }
+                    }
+                }
+                return "Spawned $spawned jobs to generate section PDFs";
             });
         } else {
-            return "PDFs already generated today";
+            return "All PDFs already generated today";
         }
     }
 

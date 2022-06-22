@@ -35,9 +35,9 @@ $table = new QueryTable(
     []
 );
 if (!$query->count()) {
-    Notifications::printWarning('Today\'s PDFs have not been generated yet. Please check back later. They should be finished within an hour or two after midnight each day.');
+    Notifications::printWarning('Today\'s PDFs have not been generated yet. Please check back later.');
 }elseif ($query->count() < 7) {
-    Notifications::printNotice('Today\'s PDFs have not all been generated yet. Please check back later. They should be finished within an hour or two after midnight each day.');
+    Notifications::printNotice('Today\'s PDFs have not all been generated yet. Please check back later.');
     echo $table;
 }else {
     echo $table;
