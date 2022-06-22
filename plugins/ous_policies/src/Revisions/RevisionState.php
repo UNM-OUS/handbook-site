@@ -9,6 +9,7 @@ class RevisionState
         'comment' => 'Public comment',
         'pending' => 'Pending action/approval',
         'published' => 'Published',
+        'cancelled' => 'Cancelled',
         'hidden' => 'Hidden'
     ];
 

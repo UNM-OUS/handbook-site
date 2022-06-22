@@ -80,6 +80,7 @@ class PolicyRevision extends FlatArray
      */
     public function nextRevision(): ?PolicyRevision
     {
+        if ($this->state != 'published') return null;
         if (!$this->effective()) return null;
         return Revisions::select($this->pageUUID())
             ->publicView()

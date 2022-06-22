@@ -17,7 +17,7 @@ class RevisionSelect extends AbstractMappedSelect
      * @return $this
      */
     public function publicView() {
-        $this->where('state <> "hidden" AND state <> "draft"');
+        $this->where('state <> "hidden" AND state <> "draft" AND state <> "cancelled"');
         return $this;
     }
 }
