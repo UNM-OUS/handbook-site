@@ -12,6 +12,7 @@ use DigraphCMS\HTML\A;
 use DigraphCMS\HTML\DIV;
 use DigraphCMS\Plugins\AbstractPlugin;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
+use PDOException;
 use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 
 class Policies extends AbstractPlugin
@@ -53,13 +54,13 @@ class Policies extends AbstractPlugin
                         [date('Y'), date('n'), date('j')]
                     );
                 $pages = [
-                    'policies' => 'UNM Faculty Handbook',
-                    'section_a' => 'UNM FHB - Section A',
-                    'section_b' => 'UNM FHB - Section B',
-                    'section_c' => 'UNM FHB - Section C',
-                    'section_d' => 'UNM FHB - Section D',
-                    'section_e' => 'UNM FHB - Section E',
                     'section_f' => 'UNM FHB - Section F',
+                    'section_e' => 'UNM FHB - Section E',
+                    'section_d' => 'UNM FHB - Section D',
+                    'section_c' => 'UNM FHB - Section C',
+                    'section_b' => 'UNM FHB - Section B',
+                    'section_a' => 'UNM FHB - Section A',
+                    'policies' => 'UNM Faculty Handbook',
                 ];
                 $spawned = 0;
                 foreach ($pages as $slug => $title) {
@@ -74,6 +75,9 @@ class Policies extends AbstractPlugin
                                 } catch (PdfGenerationTimeout $t) {
                                     $job->spawnClone();
                                     return "PDF generation timed out, cloning job to try again";
+                                } catch (PDOException $p) {
+                                    $job->spawnClone();
+                                    return "PDF generation encountered DB error, cloning job to try again";
                                 } catch (\Throwable $th) {
                                     throw $th;
                                 }

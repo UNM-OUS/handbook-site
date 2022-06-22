@@ -50,7 +50,8 @@ class PdfGenerator
         $dompdf = new Dompdf($options);
         $dompdf->loadHtml($html, "UTF-8");
         $dompdf->setPaper('letter', 'portrait');
-        return $dompdf->render();
+        $dompdf->render();
+        return $dompdf->output();
     }
 
     protected static function generateSectionCoverPageHTML(AbstractPage $page, string $title): string
