@@ -15,8 +15,8 @@ try {
     URLs::beginContext(new URL('/'));
     Context::begin();
     Context::url(new URL('/'));
-    set_time_limit(300);
-    Cron::runJobs(time() + 60);
+    set_time_limit(600);
+    Cron::runJobs(time() + 240);
     Context::end();
 } catch (\Throwable $th) {
     echo "$siteName: cron: " . $th->getMessage();

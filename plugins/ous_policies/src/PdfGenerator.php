@@ -22,7 +22,6 @@ class PdfGenerator
     {
         $page = Pages::get($slug_or_uuid);
         if (!$page) throw new \Exception("Couldn't generate PDF from section, slug or UUID \"$slug_or_uuid\" not found");
-        static::$startTime = time();
         DB::query()->insertInto('generated_policy_pdf', [
             'uuid' => Digraph::uuid(),
             'page_uuid' => $page->uuid(),
@@ -40,7 +39,8 @@ class PdfGenerator
     {
         // take as much memory and time as needed
         ini_set('memory_limit', '2048M');
-        set_time_limit(300);
+        set_time_limit(600);
+        static::$startTime = time();
         // prepare html and turn it into a pdf
         $html = static::generateSectionCoverPageHTML($page, $title);
         $html .= static::generateSectionHTML($page);
@@ -100,7 +100,7 @@ class PdfGenerator
 
     protected static function generateSectionHTML(AbstractPage $page): string
     {
-        if (time() - static::$startTime > 120) throw new PdfGenerationTimeout("Generating PDF took too long");
+        if ((time() - static::$startTime) > 60) throw new PdfGenerationTimeout("Generating PDF took too long");
         return Cache::get(
             'policy/pdf/section/' . $page->uuid(),
             function () use ($page) {
@@ -113,10 +113,17 @@ class PdfGenerator
                         '<script type="text/php">$GLOBALS["toc"]["%s"] = $pdf->get_page_number();</script>',
                         $page->uuid()
                     );
-                    Context::begin();
-                    Context::page($page);
-                    echo $page->richContent('body');
-                    Context::end();
+                    echo Cache::get(
+                        'policy/pdf/body/' . $page->uuid(),
+                        function () use ($page) {
+                            Context::begin();
+                            Context::page($page);
+                            $out = $page->richContent('body');
+                            Context::end();
+                            return $out;
+                        },
+                        12 * 3600
+                    );
                     echo "</div>";
                 }
                 // recurse, even for skipped
