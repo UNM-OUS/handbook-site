@@ -26,12 +26,13 @@ class Glossary extends AbstractPlugin
         return Cache::get(
             'glossary/html/' . md5($html),
             function () use ($html) {
+                if (!static::allPatterns()) return $html;
                 $html5 = new HTML5();
                 $fragment = $html5->parseFragment($html);
                 static::parseElement($fragment);
                 return $html5->saveHTML($fragment);
             },
-            600
+            3600
         );
     }
 
@@ -106,7 +107,7 @@ class Glossary extends AbstractPlugin
                 });
                 return $patterns;
             },
-            600
+            3600
         );
     }
 
