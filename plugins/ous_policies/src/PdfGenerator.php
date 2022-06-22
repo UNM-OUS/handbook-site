@@ -16,10 +16,13 @@ use Dompdf\Options;
 
 class PdfGenerator
 {
+    protected static $startTime;
+
     public static function generateSectionPDF(string $slug_or_uuid, string $title): string
     {
         $page = Pages::get($slug_or_uuid);
         if (!$page) throw new \Exception("Couldn't generate PDF from section, slug or UUID \"$slug_or_uuid\" not found");
+        static::$startTime = time();
         DB::query()->insertInto('generated_policy_pdf', [
             'uuid' => Digraph::uuid(),
             'page_uuid' => $page->uuid(),
@@ -71,17 +74,11 @@ class PdfGenerator
         return ob_get_clean();
     }
 
-    protected static function generateSectionTocHTML(AbstractPage $page, &$seen = []): string
+    protected static function generateSectionTocHTML(AbstractPage $page): string
     {
         return Cache::get(
-            'policy/pdf/toc/' . md5(serialize([
-                $page->uuid(),
-                $seen
-            ])),
-            function () use ($page, &$seen) {
-                // avoid cycles
-                if (in_array($page->uuid(), $seen)) return '';
-                $seen[] = $page->uuid();
+            'policy/pdf/toc/' . $page->uuid(),
+            function () use ($page) {
                 // start output buffering
                 ob_start();
                 // prepare output if this one isn't to be skipped
@@ -101,17 +98,12 @@ class PdfGenerator
         );
     }
 
-    protected static function generateSectionHTML(AbstractPage $page, &$seen = []): string
+    protected static function generateSectionHTML(AbstractPage $page): string
     {
+        if (time() - static::$startTime > 120) throw new PdfGenerationTimeout("Generating PDF took too long");
         return Cache::get(
-            'policy/pdf/section/' . md5(serialize([
-                $page->uuid(),
-                $seen
-            ])),
-            function () use ($page, &$seen) {
-                // avoid cycles
-                if (in_array($page->uuid(), $seen)) return '';
-                $seen[] = $page->uuid();
+            'policy/pdf/section/' . $page->uuid(),
+            function () use ($page) {
                 // start output buffering
                 ob_start();
                 // prepare output if this one isn't to be skipped

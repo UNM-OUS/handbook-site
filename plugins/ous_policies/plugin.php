@@ -68,8 +68,15 @@ class Policies extends AbstractPlugin
                         $check->where('page_uuid = ?', [$page->uuid()]);
                         if (!$check->count()) {
                             $spawned++;
-                            $job->spawn(function () use ($slug, $title) {
-                                return PdfGenerator::generateSectionPDF($slug, $title);
+                            $job->spawn(function (DeferredJob $job) use ($slug, $title) {
+                                try {
+                                    return PdfGenerator::generateSectionPDF($slug, $title);
+                                } catch (PdfGenerationTimeout $t) {
+                                    $job->spawnClone();
+                                    return "PDF generation timed out, cloning job to try again";
+                                } catch (\Throwable $th) {
+                                    throw $th;
+                                }
                             });
                         }
                     }
