@@ -98,7 +98,7 @@ class PdfGenerator
 
     protected static function generateSectionHTML(AbstractPage $page): string
     {
-        if ((time() - static::$startTime) > 60) throw new PdfGenerationTimeout("Generating PDF took too long");
+        if ((time() - static::$startTime) > 30) throw new PdfGenerationTimeout("Generating PDF took too long");
         return Cache::get(
             'policy/pdf/section/' . $page->uuid(),
             function () use ($page) {
