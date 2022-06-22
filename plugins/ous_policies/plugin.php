@@ -45,7 +45,7 @@ class Policies extends AbstractPlugin
                 'date_year = ? AND date_month = ? AND date_day = ?',
                 [date('Y'), date('n'), date('j')]
             );
-        if ($today->count() < 7) {
+        if (!$today->count()) {
             new DeferredJob(function (DeferredJob $job) {
                 $today = DB::query()->from('generated_policy_pdf')
                     ->where(
