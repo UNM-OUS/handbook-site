@@ -4,6 +4,7 @@ use DigraphCMS\Context;
 use DigraphCMS\Cron\Cron;
 use DigraphCMS\URL\URL;
 use DigraphCMS\URL\URLs;
+use DigraphCMS\URL\WaybackMachine;
 
 // get site name
 $siteName = basename(realpath(__DIR__ . '/../..'));
@@ -12,6 +13,7 @@ $backupDir = '/home/handbook/public_html/_backup';
 try {
     require_once __DIR__ . '/../vendor/autoload.php';
     require_once __DIR__ . '/../initialize.php';
+    WaybackMachine::deactivate();
     URLs::beginContext(new URL('/'));
     Context::begin();
     Context::url(new URL('/'));
