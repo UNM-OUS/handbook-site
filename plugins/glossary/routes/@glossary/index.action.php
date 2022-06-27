@@ -16,7 +16,7 @@ echo $page->richContent('body');
 
 $frameID = 'glossary-search--' . $page->uuid();
 
-echo "<div id='$frameID' class='navigation-frame' data-target='_top'>";
+echo "<div id='$frameID' class='navigation-frame' data-target='_top' data-no-glossary='true'>";
 
 $form = new FormWrapper('q');
 $form->setData('target', $frameID);
