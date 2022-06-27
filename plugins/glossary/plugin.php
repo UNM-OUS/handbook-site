@@ -29,7 +29,8 @@ class Glossary extends AbstractPlugin
                 if (!static::allPatterns()) return $html;
                 $html5 = new HTML5();
                 $fragment = $html5->parseFragment($html);
-                static::parseElement($fragment);
+                $matched = [];
+                static::parseElement($fragment, $matched);
                 return $html5->saveHTML($fragment);
             },
             3600
@@ -48,11 +49,14 @@ class Glossary extends AbstractPlugin
         return $result ? $result : null;
     }
 
-    protected static function parseText(string $text)
+    protected static function parseText(string $text, array &$matched = [])
     {
         return preg_replace_callback(
             static::completeRegexPattern(),
-            function ($m) {
+            function ($m) use (&$matched) {
+                // check if we've already matched this term
+                if (in_array(strtolower($m[0]), $matched)) return $m[0];
+                $matched[] = strtolower($m[0]);
                 // determine that term exists
                 $term = static::firstMatch($m[0]);
                 if (!$term) return $m[0];
@@ -111,11 +115,11 @@ class Glossary extends AbstractPlugin
         );
     }
 
-    public static function parseElement(DOMNode $element)
+    public static function parseElement(DOMNode $element, array &$matched = [])
     {
         if ($element instanceof DOMText) {
             // do parsing of text
-            $newText = static::parseText($element->textContent);
+            $newText = static::parseText($element->textContent, $matched);
             if ($newText != $element->textContent) {
                 $newChild = $element->ownerDocument->createDocumentFragment();
                 $newChild->appendXML($newText);
@@ -124,6 +128,8 @@ class Glossary extends AbstractPlugin
         } elseif ($element instanceof DOMElement) {
             // allow data-no-glossary attribute to skip glossary searching in an element
             if ($element->getAttribute('data-no-glossary')) return;
+            // reset matches on some elements
+            if (in_array($element->tagName, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) $matched = [];
         }
         // recurse if possible
         if ($element->hasChildNodes()) {
@@ -133,7 +139,7 @@ class Glossary extends AbstractPlugin
             }
             //loop through new array of child nodes
             foreach ($children as $child) {
-                static::parseElement($child);
+                static::parseElement($child, $matched);
             }
         }
     }
