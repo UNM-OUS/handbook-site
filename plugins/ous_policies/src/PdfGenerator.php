@@ -61,7 +61,7 @@ class PdfGenerator
         $out .= '<div id="header">' . $title . ' - ' . Format::datetime(time(), false, true) . '</div>';
         $out .= '<div id="footer">page <span class="page-number"></span></div>';
         $out .= '<div class="pdf-section">';
-        $out .= sprintf('<p><img src="data:image/image/jpg;base64,%s" style="width:7.5in;"/></p>', base64_encode(Media::get('/hero.jpg')->content()));
+        $out .= sprintf('<p><img src="data:image/image/jpg;base64,%s" style="width:7in;"/></p>', base64_encode(Media::get('/hero.jpg')->content()));
         $out .= "<h1>" . $title . "</h1>";
         $out .= "<p><small>This PDF was generated " . Format::datetime(time(), true, true) . "</small></p>";
         $out .= "<p><small>For the most recent copy visit <a href='https://handbook.unm.edu/pdf/'>handbook.unm.edu/pdf</a></small></p>";
