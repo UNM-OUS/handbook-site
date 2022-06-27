@@ -43,6 +43,7 @@ class PdfGenerator
         static::$startTime = time();
         // prepare html and turn it into a pdf
         $html = static::generateSectionCoverPageHTML($page, $title);
+        $html .= static::generatePrefaceHTML();
         $html .= static::generateSectionHTML($page);
         $html = Templates::render('policy/pdf-section.php', ['body' => $html]);
         $options = new Options();
@@ -67,6 +68,14 @@ class PdfGenerator
         $out .= "<p><small>For the most recent copy visit <a href='https://handbook.unm.edu/pdf/'>handbook.unm.edu/pdf</a></small></p>";
         $out .= '<h2 style="page-break-before:always;">Table of contents</h2>';
         $out .= '<table class="table-of-contents">';
+        // insert home page into the PDF as the preface
+        if ($home = Pages::get('home')) {
+            $out .= "<tr>";
+            $out .= '<td><a href="#policy-' . $home->uuid() . '">Preface</a></td>';
+            $out .= "<td>%%" . $home->uuid() . "%%</td>";
+            $out .= "</tr>";
+        }
+        // insert the rest of the toc
         $out .= static::generateSectionTocHTML($page);
         $out .= '</table>';
         $out .= '</div>';
@@ -89,12 +98,37 @@ class PdfGenerator
                 }
                 // recurse, even for skipped
                 foreach ($page->children() as $child) {
-                    $out .= static::generateSectionTocHTML($child, $seen);
+                    $out .= static::generateSectionTocHTML($child);
                 }
                 return $out;
             },
             12 * 3600
         );
+    }
+
+    protected static function generatePrefaceHTML(): string
+    {
+        $out = '';
+        if ($page = Pages::get('home')) {
+            $out .= "<div class='pdf-section' id='policy-" . $page->uuid() . "'>";
+            $out .= sprintf(
+                '<script type="text/php">$GLOBALS["toc"]["%s"] = $pdf->get_page_number();</script>',
+                $page->uuid()
+            );
+            $out .= Cache::get(
+                'policy/pdf/body/' . $page->uuid(),
+                function () use ($page) {
+                    Context::begin();
+                    Context::page($page);
+                    $out = $page->richContent('body');
+                    Context::end();
+                    return $out;
+                },
+                12 * 3600
+            );
+            $out .= "</div>";
+        }
+        return $out;
     }
 
     protected static function generateSectionHTML(AbstractPage $page): string
