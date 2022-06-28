@@ -346,12 +346,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/digraph-cms/digraph-core.git",
-                "reference": "d841fa2700c998a0b86e7e7521e5e121b924ef5f"
+                "reference": "d3a816e63528645b6bc356e5f27becabb915dc42"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/d841fa2700c998a0b86e7e7521e5e121b924ef5f",
-                "reference": "d841fa2700c998a0b86e7e7521e5e121b924ef5f",
+                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/d3a816e63528645b6bc356e5f27becabb915dc42",
+                "reference": "d3a816e63528645b6bc356e5f27becabb915dc42",
                 "shasum": ""
             },
             "require": {
@@ -423,7 +423,7 @@
                 "issues": "https://github.com/digraph-cms/digraph-core/issues",
                 "source": "https://github.com/digraph-cms/digraph-core/tree/v2"
             },
-            "time": "2022-06-27T16:49:14+00:00"
+            "time": "2022-06-28T19:12:04+00:00"
         },
         {
             "name": "dompdf/dompdf",
@@ -3225,7 +3225,7 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
@@ -3272,7 +3272,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.1"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.2"
             },
             "funding": [
                 {
@@ -4362,12 +4362,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/UNM-OUS/ous_digraph_module.git",
-                "reference": "456c9a4cec0ae9625d12eb2a64d8679c79858279"
+                "reference": "333fbb774f21f285af123f92126f114e0ae897df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UNM-OUS/ous_digraph_module/zipball/456c9a4cec0ae9625d12eb2a64d8679c79858279",
-                "reference": "456c9a4cec0ae9625d12eb2a64d8679c79858279",
+                "url": "https://api.github.com/repos/UNM-OUS/ous_digraph_module/zipball/333fbb774f21f285af123f92126f114e0ae897df",
+                "reference": "333fbb774f21f285af123f92126f114e0ae897df",
                 "shasum": ""
             },
             "require": {
@@ -4386,7 +4386,7 @@
                 "source": "https://github.com/UNM-OUS/ous_digraph_module/tree/v2",
                 "issues": "https://github.com/UNM-OUS/ous_digraph_module/issues"
             },
-            "time": "2022-06-02T15:52:24+00:00"
+            "time": "2022-06-28T19:24:33+00:00"
         }
     ],
     "packages-dev": [],
@@ -4400,5 +4400,5 @@
     "platform-overrides": {
         "php": "7.4.15"
     },
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

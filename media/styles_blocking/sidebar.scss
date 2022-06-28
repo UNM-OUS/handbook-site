@@ -10,6 +10,10 @@
         margin: 0;
         padding: $grid*2;
 
+        .search-form {
+            column-span: all;
+        }
+
         @media (min-width: 30rem) {
             columns: 2;
             column-gap: $grid;

@@ -1,6 +1,7 @@
 <?php
 
 use DigraphCMS\Content\Pages;
+use DigraphCMS\Search\SearchForm;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\MenuBar\MenuBar;
 use DigraphCMS\URL\URL;
@@ -9,6 +10,8 @@ $menu = new MenuBar;
 $menu->addClass('menubar--vertical');
 $menu->addClass('menubar--manual-toggle');
 $menu->addClass('sidebar__menu');
+
+echo new SearchForm();
 
 if ($page = Pages::get('section_a')) $menu->addPageDropdown($page, "Section A: The University", true);
 if ($page = Pages::get('section_b')) $menu->addPageDropdown($page, "Section B: Academic Freedom &amp; Tenure", true);

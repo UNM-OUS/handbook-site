@@ -17,7 +17,7 @@ use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 
 class Policies extends AbstractPlugin
 {
-    function onCron_daily()
+    public function onCron_daily()
     {
         /* Clean up old generated PDFs, only preserves yesterday, today, and the 1st of each month */
         new DeferredJob(function () {
@@ -29,6 +29,39 @@ class Policies extends AbstractPlugin
                 ->execute();
             return "Cleaned up $count old generated policy PDFs";
         });
+    }
+
+    public function onSearchHighlightSection(string $query)
+    {
+        $policies = [];
+        preg_replace_callback(
+            '/\b[a-f][\.\s\-_]?[0-9]{1,3}([\.\s\-_][0-9]{1,3})*\b/i',
+            function ($m) use (&$policies) {
+                $number = preg_replace('/[\.\s\-_]/', '.', $m[0]);
+                $number = preg_replace('/([a-f])[\.]?/', '$1', $number);
+                $revision = Revisions::select()
+                    ->publicView()
+                    ->where('`num` LIKE ?', [$number])
+                    ->fetch();
+                if (!$revision) return null;
+                $policy = $revision->policy();
+                $policies[$policy->uuid()] = $policy;
+            },
+            $query
+        );
+        if (!$policies) return;
+        echo "<div class='search-results__highlighted-policies'>";
+        if (count($policies) == 1) {
+            echo "<strong>Looking for policy " . reset($policies)->url()->html() . "?</strong>";
+        } else {
+            echo '<strong>Looking for one of these policies?</strong>';
+            foreach ($policies as $policy) {
+                echo "<div>";
+                echo $policy->url()->html();
+                echo "</div>";
+            }
+        }
+        echo "</div>";
     }
 
     /**
