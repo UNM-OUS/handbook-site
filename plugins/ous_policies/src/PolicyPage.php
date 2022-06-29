@@ -4,7 +4,10 @@ namespace DigraphCMS_Plugins\unmous\ous_policies;
 
 use DigraphCMS\Content\AbstractPage;
 use DigraphCMS\Cron\DeferredJob;
+use DigraphCMS\DB\DB;
 use DigraphCMS\RichContent\RichContent;
+use DigraphCMS\Search\Search;
+use DigraphCMS\UI\Format;
 use DigraphCMS\URL\URL;
 use DigraphCMS\Users\User;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
@@ -17,6 +20,32 @@ class PolicyPage extends AbstractPage
     const DEFAULT_UNIQUE_SLUG = false;
 
     protected $currentRevision = false;
+
+    public function onCron_index_page()
+    {
+        // index page
+        $body = $this->richContent('body');
+        if ($body) Search::indexURL($this->uuid(), $this->url(), $this->name(), $body->html());
+        // index revisions
+        $revisions = $this->revisions()->publicView();
+        while ($revision = $revisions->fetch()) {
+            $title = $revision->number();
+            if (!$title || $title == 'Information') {
+                $title = $revision->name();
+            }
+            $title .= ': ' . $revision->title();
+            if ($revision->effective()) {
+                $title .= ': ' . Format::datetime($revision->effective(), true, true);
+            }
+            Search::indexURL($this->uuid(), $revision->url(), $title, implode(' ', [
+                $revision->effective() ? Format::datetime($revision->effective(), true, true) : '',
+                $revision->number(),
+                $revision->name(),
+                $revision->title(),
+                $revision->body()->html(),
+            ]));
+        }
+    }
 
     /**
      * PolicyPage overrides settings to make all non-index URLs use UUIDs
@@ -44,6 +73,7 @@ class PolicyPage extends AbstractPage
      */
     public static function onRecursiveDelete(DeferredJob $job, AbstractPage $page)
     {
+        // delete revisions
         $revisions = Revisions::select($page->uuid());
         while ($revision = $revisions->fetch()) {
             $uuid = $revision->uuid();
@@ -54,6 +84,15 @@ class PolicyPage extends AbstractPage
                 return "Deleted revision $uuid";
             });
         }
+        // delete search indexes
+        $uuid = $page->uuid();
+        $job->spawn(function () use ($uuid) {
+            $n = DB::query()
+                ->delete('search_index')
+                ->where('owner = ?', [$uuid])
+                ->execute();
+            return "Deleted search indexes created by page $uuid ($n)";
+        });
     }
 
     /**
