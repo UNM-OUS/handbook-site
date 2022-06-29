@@ -1,2 +1,3 @@
 page_types:
   policy: \DigraphCMS_Plugins\unmous\ous_policies\PolicyPage
+  policy-comment: \DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage
