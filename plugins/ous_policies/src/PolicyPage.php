@@ -42,7 +42,7 @@ class PolicyPage extends AbstractPage
                 $revision->number(),
                 $revision->name(),
                 $revision->title(),
-                $revision->body()->html(),
+                $revision->notes()->html()
             ]));
         }
     }
