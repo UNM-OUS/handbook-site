@@ -14,7 +14,7 @@ Context::response()->setSearchIndex(!Context::url()->query());
 
 <p>
     The following faculty review and comment periods have been posted regarding proposed policy revisions.
-    Please email your comments to <?php Format::base64obfuscate('<a href="mailto:handbook@unm.edu">handbook@unm.edu</a>'); ?>.
+    Please email your comments to <?php echo Format::base64obfuscate('<a href="mailto:handbook@unm.edu">handbook@unm.edu</a>'); ?>.
     All comments will be provided to the committees.
 </p>
 
