@@ -21,13 +21,14 @@ class PolicyPage extends AbstractPage
 
     protected $currentRevision = false;
 
-    public function onCron_index_page()
+    public function onCron_index_pages()
     {
         // index page
         $body = $this->richContent('body');
         if ($body) Search::indexURL($this->uuid(), $this->url(), $this->name(), $body->html());
         // index revisions
         $revisions = $this->revisions()->publicView();
+        if ($revisions->count() <= 1) return; // only index revisions if there's more than one
         while ($revision = $revisions->fetch()) {
             $title = $revision->number();
             if (!$title || $title == 'Information') {
@@ -95,16 +96,6 @@ class PolicyPage extends AbstractPage
         });
     }
 
-    /**
-     * Do a daily refresh of cron jobs for every policy, just in case cron
-     * tasks are added later.
-     *
-     * @return void
-     */
-    public function onCron_daily()
-    {
-        $this->prepareCronJobs();
-    }
 
     /**
      * Check regularly to ensure policy name and number match current revision.
