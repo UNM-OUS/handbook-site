@@ -346,12 +346,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/digraph-cms/digraph-core.git",
-                "reference": "d59c3ca80f4c6b0f98e59b29550667779050ec70"
+                "reference": "78d318bacae8abd55f0b24620e9516985f465269"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/d59c3ca80f4c6b0f98e59b29550667779050ec70",
-                "reference": "d59c3ca80f4c6b0f98e59b29550667779050ec70",
+                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/78d318bacae8abd55f0b24620e9516985f465269",
+                "reference": "78d318bacae8abd55f0b24620e9516985f465269",
                 "shasum": ""
             },
             "require": {
@@ -423,7 +423,7 @@
                 "issues": "https://github.com/digraph-cms/digraph-core/issues",
                 "source": "https://github.com/digraph-cms/digraph-core/tree/v2"
             },
-            "time": "2022-06-30T18:12:45+00:00"
+            "time": "2022-07-05T14:36:39+00:00"
         },
         {
             "name": "dompdf/dompdf",
