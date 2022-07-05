@@ -36,10 +36,10 @@ class PolicyPage extends AbstractPage
             }
             $title .= ': ' . $revision->title();
             if ($revision->effective()) {
-                $title .= ': ' . Format::datetime($revision->effective(), true, true);
+                $title .= ': ' . Format::date($revision->effective(), true, true);
             }
             Search::indexURL($this->uuid(), $revision->url(), $title, implode(' ', [
-                $revision->effective() ? Format::datetime($revision->effective(), true, true) : '',
+                $revision->effective() ? Format::date($revision->effective(), true, true) : '',
                 $revision->number(),
                 $revision->name(),
                 $revision->title(),
