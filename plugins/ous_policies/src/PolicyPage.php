@@ -21,7 +21,7 @@ class PolicyPage extends AbstractPage
 
     protected $currentRevision = false;
 
-    public function onCron_index_pages()
+    public function cronJob_index_pages()
     {
         // index page
         $body = $this->richContent('body');
@@ -102,7 +102,7 @@ class PolicyPage extends AbstractPage
      *
      * @return void
      */
-    public function onCron_halfhourly()
+    public function cronJob_halfhourly()
     {
         $changed = false;
         if ($current = $this->currentRevision()) {

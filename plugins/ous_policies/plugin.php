@@ -17,7 +17,7 @@ use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 
 class Policies extends AbstractPlugin
 {
-    public function onCron_daily()
+    public function cronJob_daily()
     {
         /* Clean up old generated PDFs, only preserves yesterday, today, and the 1st of each month */
         new DeferredJob(function () {
@@ -72,7 +72,7 @@ class Policies extends AbstractPlugin
      *
      * @return void
      */
-    public function onCron_hourly()
+    public function cronJob_hourly()
     {
         $today = DB::query()->from('generated_policy_pdf')
             ->where(
