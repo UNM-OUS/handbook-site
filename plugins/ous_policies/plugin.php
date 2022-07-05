@@ -11,12 +11,25 @@ use DigraphCMS\DB\DB;
 use DigraphCMS\HTML\A;
 use DigraphCMS\HTML\DIV;
 use DigraphCMS\Plugins\AbstractPlugin;
+use DigraphCMS\UI\Format;
+use DigraphCMS\URL\URL;
+use DigraphCMS\Users\Permissions;
+use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
+use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 use PDOException;
 use Thunder\Shortcode\Shortcode\ShortcodeInterface;
 
 class Policies extends AbstractPlugin
 {
+    public function onStaticUrlPermissions_under_review(URL $url)
+    {
+        if (in_array($url->action(), ['add_comment_period', 'manage_periods'])) {
+            return Permissions::inMetaGroup('policyreview__edit');
+        }
+        return null;
+    }
+
     public function cronJob_daily()
     {
         /* Clean up old generated PDFs, only preserves yesterday, today, and the 1st of each month */
@@ -134,6 +147,44 @@ class Policies extends AbstractPlugin
             $policies = [];
         }
         return static::sortPages($policies);
+    }
+
+    public function onShortCode_policy_comment_numbers(ShortcodeInterface $s): ?string
+    {
+        $page = $s->getBbCode() ?
+            Pages::get($s->getBbCode())
+            : null;
+        $page = $page ?? Context::page();
+        if (!$page || !($page instanceof CommentPage)) return 'N/A';
+        return implode(
+            ', ',
+            array_filter(array_map(
+                function (PolicyRevision $revision) {
+                    return $revision->number() ?? false;
+                },
+                $page->revisions()
+            ))
+        );
+    }
+
+    public function onShortCode_policy_comment_firstday(ShortcodeInterface $s): ?string
+    {
+        $page = $s->getBbCode() ?
+            Pages::get($s->getBbCode())
+            : null;
+        $page = $page ?? Context::page();
+        if (!$page || !($page instanceof CommentPage)) return null;
+        return Format::date($page['first_day'], true);
+    }
+
+    public function onShortCode_policy_comment_lastday(ShortcodeInterface $s): ?string
+    {
+        $page = $s->getBbCode() ?
+            Pages::get($s->getBbCode())
+            : null;
+        $page = $page ?? Context::page();
+        if (!$page || !($page instanceof CommentPage)) return null;
+        return Format::date($page['last_day'], true);
     }
 
     public function onShortCode_indent(ShortcodeInterface $s): ?string

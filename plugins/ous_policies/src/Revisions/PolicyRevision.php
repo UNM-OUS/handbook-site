@@ -321,7 +321,7 @@ class PolicyRevision extends FlatArray
 
     public function number(): ?string
     {
-        return $this->num;
+        return $this->num ? $this->num : null;
     }
 
     /**

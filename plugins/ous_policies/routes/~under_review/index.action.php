@@ -3,6 +3,7 @@
 use DigraphCMS\Context;
 use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
+use DigraphCMS\UI\Notifications;
 use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
 use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPeriods;
 
@@ -14,8 +15,8 @@ Context::response()->setSearchIndex(!Context::url()->query());
 
 <p>
     The following faculty review and comment periods have been posted regarding proposed policy revisions.
-    Please email your comments to <?php echo Format::base64obfuscate('<a href="mailto:handbook@unm.edu">handbook@unm.edu</a>'); ?>.
-    All comments will be provided to the committees.
+    All comments will be provided to the relevant committees.
+    Please email your comments to <?php echo Format::base64obfuscate('<a href="mailto:handbook@unm.edu">handbook@unm.edu</a>'); ?>
 </p>
 
 <p>
@@ -27,7 +28,9 @@ Context::response()->setSearchIndex(!Context::url()->query());
 <?php
 
 $current = CommentPeriods::all();
-if ($current->count()) {
+if (!$current->count()) {
+    Notifications::printNotice('No comment periods are currently open');
+} else {
     $table = new QueryTable(
         $current,
         function (CommentPage $page) {
@@ -39,9 +42,11 @@ if ($current->count()) {
     echo $table;
 }
 
+$past = CommentPeriods::past();
+if (!$past->count()) return;
+
 echo "<h2>Past comment periods</h2>";
 
-$past = CommentPeriods::past();
 $table = new QueryTable(
     $past,
     function (CommentPage $page) {
