@@ -2516,16 +2516,16 @@
         },
         {
             "name": "robmorgan/phinx",
-            "version": "0.12.10",
+            "version": "0.12.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/phinx.git",
-                "reference": "ad056cff354fc67fedf9bf96c441c2b428afad0c"
+                "reference": "2046c447b1a4425956555118200138e22ebd680c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/phinx/zipball/ad056cff354fc67fedf9bf96c441c2b428afad0c",
-                "reference": "ad056cff354fc67fedf9bf96c441c2b428afad0c",
+                "url": "https://api.github.com/repos/cakephp/phinx/zipball/2046c447b1a4425956555118200138e22ebd680c",
+                "reference": "2046c447b1a4425956555118200138e22ebd680c",
                 "shasum": ""
             },
             "require": {
@@ -2596,9 +2596,9 @@
             ],
             "support": {
                 "issues": "https://github.com/cakephp/phinx/issues",
-                "source": "https://github.com/cakephp/phinx/tree/0.12.10"
+                "source": "https://github.com/cakephp/phinx/tree/0.12.11"
             },
-            "time": "2022-01-21T19:53:14+00:00"
+            "time": "2022-07-03T16:41:43+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",
@@ -4400,5 +4400,5 @@
     "platform-overrides": {
         "php": "7.4.15"
     },
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.2.0"
 }

@@ -79,7 +79,6 @@ jobs:
           script_stop: true
           script: |
             cd ${{ secrets.REMOTE_PATH }}/test
-            /usr/local/bin/ea-php74 vendor/bin/phinx migrate --dry-run
             /usr/local/bin/ea-php74 vendor/bin/phinx migrate
       - name: Leave maintenance mode
         uses: appleboy/ssh-action@master
