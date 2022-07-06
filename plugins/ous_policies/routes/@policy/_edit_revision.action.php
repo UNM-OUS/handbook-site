@@ -83,7 +83,7 @@ $form->addChild($metadata);
 $form->addChild($policyContent);
 
 // handle form
-$form->addCallback(function () use ($revision, $title, $notes, $state, $type, $number, $name, $effective, $body) {
+$form->addCallback(function () use ($revision, $title, $moved, $notes, $state, $type, $number, $name, $effective, $body) {
     $revision->setTitle($title->value())
         ->setState($state->value())
         ->setType($type->value())
@@ -92,6 +92,7 @@ $form->addCallback(function () use ($revision, $title, $notes, $state, $type, $n
         ->setEffective($effective->value())
         ->setBody($body->value())
         ->setNotes($notes->value())
+        ->setMoved($moved->value())
         ->update();
     Notifications::flashConfirmation('Revision updated');
     throw new RedirectException(new URL('manage_revisions.html'));

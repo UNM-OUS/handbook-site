@@ -40,7 +40,7 @@ echo new QueryTable(
     },
     [
         new ColumnHeader('Revision'),
-        new QueryColumnHeader('Effective date', 'effective', $query),
+        new QueryColumnHeader('Date', 'effective', $query),
         new ColumnHeader('Approved by'),
         new ColumnHeader('Status')
     ]

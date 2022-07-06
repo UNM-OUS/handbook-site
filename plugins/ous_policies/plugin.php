@@ -149,22 +149,24 @@ class Policies extends AbstractPlugin
         return static::sortPages($policies);
     }
 
-    public function onShortCode_policy_comment_numbers(ShortcodeInterface $s): ?string
+    public function onShortCode_policy_comment_to(ShortcodeInterface $s): ?string
     {
         $page = $s->getBbCode() ?
             Pages::get($s->getBbCode())
             : null;
         $page = $page ?? Context::page();
-        if (!$page || !($page instanceof CommentPage)) return 'N/A';
-        return implode(
+        if (!$page || !($page instanceof CommentPage)) return ' ';
+        $to = implode(
             ', ',
             array_filter(array_map(
                 function (PolicyRevision $revision) {
                     return $revision->number() ?? false;
                 },
-                $page->revisions()
+                $page->revisions()->fetchAll()
             ))
         );
+        $to = $to ? 'to ' . $to : ' ';
+        return $to;
     }
 
     public function onShortCode_policy_comment_firstday(ShortcodeInterface $s): ?string

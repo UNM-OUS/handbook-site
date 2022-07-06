@@ -4,10 +4,12 @@ namespace DigraphCMS_Plugins\unmous\ous_policies\Comment;
 
 use DateTime;
 use DigraphCMS\Content\Page;
+use DigraphCMS\DB\DB;
 use DigraphCMS\URL\URL;
 use DigraphCMS\Users\User;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
+use DigraphCMS_Plugins\unmous\ous_policies\Revisions\RevisionSelect;
 
 class CommentPage extends Page
 {
@@ -16,12 +18,15 @@ class CommentPage extends Page
     public function cronJob_frequent()
     {
         if ($this->isNow()) {
+            // when period is current set states to "comment"
             $this['period_state'] = 'open';
             $this->setRevisionStates('comment');
         } elseif ($this->isOver()) {
+            // when period ends set any states in "comment" to "pending"
             $this['period_state'] = 'over';
-            $this->setRevisionStates('pending', 'comment');
+            $this->setRevisionStates('pending', ['comment']);
         } else {
+            // when period is upcoming set states to "pending"
             $this['period_state'] = 'pending';
             $this->setRevisionStates('pending');
         }
@@ -60,46 +65,64 @@ class CommentPage extends Page
 
     public function insert(?string $parent_uuid = null)
     {
+        if (!$this['custom_name']) unset($this['custom_name']);
         $this->updateName();
         parent::insert($parent_uuid);
     }
 
     public function update()
     {
+        if (!$this['custom_name']) unset($this['custom_name']);
         $this->updateName();
         parent::update();
     }
 
-    /**
-     * @return PolicyRevision[]
-     */
-    public function revisions(): array
+    public function revisions(): RevisionSelect
     {
-        return array_filter(
-            array_map(
-                function ($uuid) {
-                    return Revisions::get($uuid) ?? false;
-                },
-                $this['revisions'] ?? []
-            )
-        );
+        return Revisions::select()
+            ->leftJoin('page on page_uuid = page.uuid')
+            ->where(sprintf(
+                'ous_policy_revision.uuid in (%s)',
+                implode(',', array_map(
+                    function ($uuid) {
+                        return DB::pdo()->quote($uuid);
+                    },
+                    $this['revisions'] ?? []
+                ))
+            ))
+            ->order(null)
+            ->order('page.sort_weight ASC')
+            ->order('COALESCE(page.sort_name, page.name) ASC');
     }
 
+    /**
+     * @param PolicyRevision $revision
+     * @return $this
+     */
     public function addRevision(PolicyRevision $revision)
     {
-        $this['revisions'][] = $revision->uuid();
+        $revisions = $this['revisions'];
+        $revisions[] = $revision->uuid();
+        unset($this['revisions']);
+        $this['revisions'] = array_unique($revisions);
+        return $this;
     }
 
+    /**
+     * @param PolicyRevision $revision
+     * @return $this
+     */
     public function removeRevision(PolicyRevision $revision)
     {
-        $updatedRevisions = array_filter(
+        $revisions = array_filter(
             $this['revisions'],
             function ($uuid) use ($revision) {
                 return $uuid != $revision->uuid();
             }
         );
         unset($this['revisions']);
-        $this['revisions'] = $updatedRevisions;
+        $this['revisions'] = $revisions;
+        return $this;
     }
 
     /**
@@ -110,22 +133,26 @@ class CommentPage extends Page
      */
     protected function updateName()
     {
+        $this->name = $this['custom_name']
+            ?? $this->defaultName();
+    }
+
+    public function defaultName(): string
+    {
         $to = implode(
             ', ',
             array_filter(array_map(
                 function (PolicyRevision $revision) {
                     return $revision->number() ?? false;
                 },
-                $this->revisions()
+                $this->revisions()->fetchAll()
             ))
         );
         $to = $to ? " to $to" : "";
-        $this->name(
-            sprintf(
-                '%s: Proposed changes%s',
-                $this->firstDay()->format('Y-m-d'),
-                $to
-            )
+        return sprintf(
+            '%s: Proposed changes%s',
+            $this->firstDay()->format('Y-m-d'),
+            $to
         );
     }
 

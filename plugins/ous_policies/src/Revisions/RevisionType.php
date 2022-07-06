@@ -7,8 +7,8 @@ class RevisionType
     const TYPES = [
         'normal' => 'Normal revision',
         'minor' => 'Minor/Maintenance revision',
-        'abolished' => 'Policy is being abolished',
-        'created' => 'New policy created',
+        'abolished' => 'Policy abolished',
+        'created' => 'New policy',
         'firstweb' => 'First web version',
     ];
 

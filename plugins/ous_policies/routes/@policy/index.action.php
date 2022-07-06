@@ -2,7 +2,9 @@
 
 use DigraphCMS\Context;
 use DigraphCMS\UI\Format;
+use DigraphCMS\UI\Notifications;
 use DigraphCMS\URL\URL;
+use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
 use DigraphCMS_Plugins\unmous\ous_policies\PolicyPage;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
 
@@ -10,6 +12,23 @@ Context::response()->enableCache();
 
 /** @var PolicyPage */
 $page = Context::page();
+
+$comment = [];
+foreach ($page->futureRevisions() as $revision) {
+    $comment = array_merge($comment, $revision->currentCommentPeriods());
+}
+$comment = array_unique($comment);
+if ($comment) {
+    Notifications::printConfirmation(sprintf(
+        '<p>A review and comment period for proposed revisions to this policy is available:<br>%s</p>',
+        implode('<br>', array_map(
+            function (CommentPage $page) {
+                return $page->url()->html();
+            },
+            $comment
+        ))
+    ));
+}
 
 echo $page->richContent('body');
 

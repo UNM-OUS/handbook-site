@@ -6,8 +6,8 @@ class RevisionState
 {
     const STATES = [
         'draft' => 'Draft',
-        'comment' => 'Public comment',
-        'pending' => 'Pending action/approval',
+        'comment' => 'Out for comment',
+        'pending' => 'Action or approval pending',
         'published' => 'Published',
         'cancelled' => 'Cancelled',
         'hidden' => 'Hidden'

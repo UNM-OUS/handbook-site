@@ -7,10 +7,14 @@ use DigraphCMS\HTTP\HttpError;
 use DigraphCMS\UI\ActionMenu;
 use DigraphCMS\UI\Breadcrumb;
 use DigraphCMS\UI\Format;
+use DigraphCMS\UI\Notifications;
 use DigraphCMS\UI\Toolbars\ToolbarSpacer;
 use DigraphCMS\URL\URL;
 use DigraphCMS\Users\Permissions;
+use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
+
+Context::response()->enableCache();
 
 // verify that revision exists
 $uuid = Context::url()->action();
@@ -30,6 +34,7 @@ ActionMenu::addContextAction(new URL("_delete_revision.html?uuid=$uuid"));
 printf('<h1><a href="%s">Revision history</a></h1>', new URL('_revision_history.html'));
 
 $current = Context::page()->currentRevision();
+
 if (Context::page()->revisions()->count() > 1) {
     echo "<div class='toolbar'>";
     if ($prev = $revision->previousRevision()) echo new Icon('previous') . '  ' . $prev->url()->html();
@@ -37,9 +42,11 @@ if (Context::page()->revisions()->count() > 1) {
     if ($next = $revision->nextRevision()) echo $next->url()->html() . ' ' . new Icon('next');
     echo "</div>";
 }
+
 echo "<div class='card card--light'>";
 
 echo "<h2>" . $revision->metaTitle() . "</h2>";
+
 echo "<p>Revision type: " . $revision->type()->label();
 echo "<br>Revision state: " . $revision->state()->label();
 if (!$revision->effective()) {
@@ -56,6 +63,34 @@ if (!$revision->effective()) {
     }
 }
 echo "</p>";
+
+if ($comment = $revision->currentCommentPeriods()) {
+    Notifications::printConfirmation(sprintf(
+        '<p>Currently under review:<br>%s</p>',
+        implode('<br>', array_map(
+            function (CommentPage $page) use ($revision) {
+                Breadcrumb::parent($page->url());
+                Breadcrumb::setTopName($revision->fullName());
+                return $page->url()->html();
+            },
+            $comment
+        ))
+    ));
+}
+
+if ($comment = $revision->pastCommentPeriods()) {
+    printf(
+        '<p>Past review window%s:<br>%s</p>',
+        count($comment) > 1 ? 's' : '',
+        implode('<br>', array_map(
+            function (CommentPage $page) {
+                return $page->url()->html();
+            },
+            $comment
+        ))
+    );
+}
+
 echo $revision->notes();
 
 echo "</div>";

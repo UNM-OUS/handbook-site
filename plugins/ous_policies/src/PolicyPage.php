@@ -157,7 +157,7 @@ class PolicyPage extends AbstractPage
     public function futureRevisions(): RevisionSelect
     {
         return $this->revisions()
-            ->where('effective > ?', [time()]);
+            ->where('effective > ? OR effective is null', [time()]);
     }
 
     public function currentRevision(): ?PolicyRevision

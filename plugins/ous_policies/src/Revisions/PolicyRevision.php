@@ -3,6 +3,7 @@
 namespace DigraphCMS_Plugins\unmous\ous_policies\Revisions;
 
 use DateTime;
+use DigraphCMS\Cache\Cache;
 use DigraphCMS\Content\Pages;
 use DigraphCMS\Digraph;
 use DigraphCMS\RichContent\RichContent;
@@ -11,6 +12,8 @@ use DigraphCMS\UI\Format;
 use DigraphCMS\URL\URL;
 use DigraphCMS\Users\User;
 use DigraphCMS\Users\Users;
+use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
+use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPeriods;
 use DigraphCMS_Plugins\unmous\ous_policies\PolicyPage;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 use Flatrr\FlatArray;
@@ -33,7 +36,7 @@ class PolicyRevision extends FlatArray
     protected $updated_by;
 
     const DEFAULT_NAMES = [
-        'normal' => 'Policy updated',
+        'normal' => 'Policy update',
         'minor' => 'Minor/maintenance revision',
         'abolished' => 'Policy abolished',
         'created' => 'New policy',
@@ -70,6 +73,40 @@ class PolicyRevision extends FlatArray
         $this->updated = $updated ?? time();
         $this->updated_by = $updated_by ?? Session::uuid();
         $this->set(null, $data);
+    }
+
+    public function currentCommentPeriods(): array
+    {
+        return Cache::get(
+            'policy/revision/currentcomment/' . $this->uuid(),
+            function () {
+                return array_filter(
+                    CommentPeriods::current()
+                        ->where('data like ?', ['%' . $this->uuid() . '%'])
+                        ->fetchAll(),
+                    function (CommentPage $page) {
+                        return in_array($this->uuid(), $page['revisions']);
+                    }
+                );
+            }
+        );
+    }
+
+    public function pastCommentPeriods(): array
+    {
+        return Cache::get(
+            'policy/revision/pastcomment/' . $this->uuid(),
+            function () {
+                return array_filter(
+                    CommentPeriods::past()
+                        ->where('data like ?', ['%' . $this->uuid() . '%'])
+                        ->fetchAll(),
+                    function (CommentPage $page) {
+                        return in_array($this->uuid(), $page['revisions']);
+                    }
+                );
+            }
+        );
     }
 
     /**
