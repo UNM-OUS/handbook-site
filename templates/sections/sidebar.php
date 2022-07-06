@@ -1,29 +1,37 @@
 <?php
 
+use DigraphCMS\Cache\Cache;
 use DigraphCMS\Content\Pages;
+use DigraphCMS\Context;
 use DigraphCMS\Search\SearchForm;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\MenuBar\MenuBar;
 use DigraphCMS\URL\URL;
 
-$menu = new MenuBar;
-$menu->addClass('menubar--vertical');
-$menu->addClass('menubar--manual-toggle');
-$menu->addClass('sidebar__menu');
-
 echo new SearchForm();
 
-if ($page = Pages::get('section_a')) $menu->addPageDropdown($page, "Section A: The University", true);
-if ($page = Pages::get('section_b')) $menu->addPageDropdown($page, "Section B: Academic Freedom &amp; Tenure", true);
-if ($page = Pages::get('section_c')) $menu->addPageDropdown($page, "Section C: Faculty Rules and Benefits", true);
-if ($page = Pages::get('section_d')) $menu->addPageDropdown($page, "Section D: Teaching and Student-Related", true);
-if ($page = Pages::get('section_e')) $menu->addPageDropdown($page, "Section E: Research", true);
-if ($page = Pages::get('section_f')) $menu->addPageDropdown($page, "Section F: Branch Community Colleges", true);
+echo Cache::get(
+    'sidebar/' . md5(Context::url()->path()),
+    function () {
+        $menu = new MenuBar;
+        $menu->addClass('menubar--vertical');
+        $menu->addClass('menubar--manual-toggle');
+        $menu->addClass('sidebar__menu');
 
-$menu->addURL(new URL('/pdf/'), 'Faculty Handbook PDFs');
-$menu->addURL(new URL('/abolished/'), 'Abolished policies');
+        if ($page = Pages::get('section_a')) $menu->addPageDropdown($page, "Section A: The University", true);
+        if ($page = Pages::get('section_b')) $menu->addPageDropdown($page, "Section B: Academic Freedom &amp; Tenure", true);
+        if ($page = Pages::get('section_c')) $menu->addPageDropdown($page, "Section C: Faculty Rules and Benefits", true);
+        if ($page = Pages::get('section_d')) $menu->addPageDropdown($page, "Section D: Teaching and Student-Related", true);
+        if ($page = Pages::get('section_e')) $menu->addPageDropdown($page, "Section E: Research", true);
+        if ($page = Pages::get('section_f')) $menu->addPageDropdown($page, "Section F: Branch Community Colleges", true);
 
-echo $menu;
+        $menu->addURL(new URL('/pdf/'), 'Faculty Handbook PDFs');
+        $menu->addURL(new URL('/abolished/'), 'Abolished policies');
+
+        return $menu->__toString();
+    },
+    3600
+);
 
 ?>
 

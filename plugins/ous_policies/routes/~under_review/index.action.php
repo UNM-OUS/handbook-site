@@ -7,6 +7,7 @@ use DigraphCMS\UI\Notifications;
 use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
 use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPeriods;
 
+Context::response()->enableCache();
 Context::response()->setSearchIndex(!Context::url()->query());
 
 ?>

@@ -3,6 +3,8 @@
 use DigraphCMS\Context;
 use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
 
+Context::response()->enableCache();
+
 /** @var CommentPage */
 $page = Context::page();
 

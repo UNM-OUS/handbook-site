@@ -6,6 +6,8 @@ use DigraphCMS\URL\URL;
 use DigraphCMS_Plugins\unmous\ous_policies\PolicyPage;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
 
+Context::response()->enableCache();
+
 /** @var PolicyPage */
 $page = Context::page();
 

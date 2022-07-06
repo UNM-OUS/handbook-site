@@ -9,6 +9,8 @@ use DigraphCMS_Plugins\byjoby\glossary\Glossary;
 use DigraphCMS_Plugins\byjoby\glossary\GlossaryPage;
 use DigraphCMS_Plugins\byjoby\glossary\GlossaryTerm;
 
+Context::response()->enableCache();
+
 /** @var GlossaryPage */
 $page = Context::page();
 

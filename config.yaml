@@ -21,8 +21,9 @@ theme:
 errors:
   display_trace: false
 cache:
-  path: "${paths.base}/cache"
   ttl: 300
+  template_ttl: 86400
+  content_ttl: 3600
 files:
   ttl: 604800
   css:
