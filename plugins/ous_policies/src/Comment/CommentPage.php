@@ -79,21 +79,23 @@ class CommentPage extends Page
 
     public function revisions(): RevisionSelect
     {
-        return Revisions::select()
+        $select = Revisions::select()
             ->leftJoin('page on page_uuid = page.uuid')
-            ->select('page.sort_name as page_sort_name, page.name as page_name, page.sort_weight as page_sort_weight')
-            ->where(sprintf(
+            ->order(null)
+            ->order('page.sort_weight ASC')
+            ->order('COALESCE(page.sort_name, page.name) ASC');
+        if ($this['revisions']) {
+            $select->where(sprintf(
                 'ous_policy_revision.uuid in (%s)',
                 implode(',', array_map(
                     function ($uuid) {
                         return DB::pdo()->quote($uuid);
                     },
-                    $this['revisions'] ?? []
+                    $this['revisions']
                 ))
-            ))
-            ->order(null)
-            ->order('page_sort_weight ASC')
-            ->order('COALESCE(page_sort_name, page_name) ASC');
+            ));
+        }
+        return $select;
     }
 
     /**
