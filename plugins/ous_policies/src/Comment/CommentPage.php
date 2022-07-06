@@ -94,6 +94,8 @@ class CommentPage extends Page
                     $this['revisions']
                 ))
             ));
+        } else {
+            $select->where('ous_policy_revision.uuid = ""');
         }
         return $select;
     }

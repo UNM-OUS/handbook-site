@@ -28,7 +28,7 @@ Context::response()->setSearchIndex(!Context::url()->query());
 
 <?php
 
-$current = CommentPeriods::all();
+$current = CommentPeriods::current();
 if (!$current->count()) {
     Notifications::printNotice('No comment periods are currently open');
 } else {
