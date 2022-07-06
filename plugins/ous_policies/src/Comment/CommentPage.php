@@ -81,6 +81,7 @@ class CommentPage extends Page
     {
         return Revisions::select()
             ->leftJoin('page on page_uuid = page.uuid')
+            ->select('page.sort_name as page_sort_name, page.name as page_name, page.sort_weight as page_sort_weight')
             ->where(sprintf(
                 'ous_policy_revision.uuid in (%s)',
                 implode(',', array_map(
@@ -91,8 +92,8 @@ class CommentPage extends Page
                 ))
             ))
             ->order(null)
-            ->order('page.sort_weight ASC')
-            ->order('COALESCE(page.sort_name, page.name) ASC');
+            ->order('page_sort_weight ASC')
+            ->order('COALESCE(page_sort_name, page_name) ASC');
     }
 
     /**
