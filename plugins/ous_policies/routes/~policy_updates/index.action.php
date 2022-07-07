@@ -21,7 +21,6 @@ use DigraphCMS_Plugins\unmous\ous_policies\PolicyPage;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 
-Context::response()->enableCache();
 Context::response()->setSearchIndex(!Context::url()->query());
 $form = new FormWrapper();
 

@@ -13,7 +13,6 @@ use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Notifications;
 
-Context::response()->enableCache();
 Context::response()->setSearchIndex(!Context::url()->query());
 Context::fields()['template-sidebar'] = true;
 
