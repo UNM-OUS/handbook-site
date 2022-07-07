@@ -9,6 +9,7 @@ use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPeriods;
 
 Context::response()->enableCache();
 Context::response()->setSearchIndex(!Context::url()->query());
+Context::fields()['template-sidebar'] = true;
 
 ?>
 

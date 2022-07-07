@@ -138,8 +138,11 @@ class CommentPage extends Page
      */
     protected function updateName()
     {
-        $this->name = $this['custom_name']
-            ?? $this->defaultName();
+        $this->name = sprintf(
+            '%s: %s',
+            $this->firstDay()->format('Y-m-d'),
+            $this['custom_name'] ?? $this->defaultName()
+        );
     }
 
     public function defaultName(): string
@@ -155,8 +158,7 @@ class CommentPage extends Page
         );
         $to = $to ? " to $to" : "";
         return sprintf(
-            '%s: Proposed changes%s',
-            $this->firstDay()->format('Y-m-d'),
+            'Proposed changes%s',
             $to
         );
     }
