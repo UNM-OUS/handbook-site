@@ -10,5 +10,6 @@ class PolicyAutocompleteInput extends PageInput
     public function __construct(string $id = null, URL $endpoint = null)
     {
         parent::__construct($id, $endpoint ?? new URL('/~api/v1/autocomplete/page.php?class=policy'));
+        $this->setAttribute('placeholder','search for a policy');
     }
 }
