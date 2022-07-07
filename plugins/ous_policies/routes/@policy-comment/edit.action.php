@@ -16,9 +16,9 @@ $page = Context::page();
 $form = new FormWrapper('edit-' . Context::pageUUID());
 
 $name = (new Field('Custom name'))
-    ->setAttribute('placeholder', $page->defaultName())
     ->setDefault($page['custom_name'])
     ->addTip('Generally this can be left blank, and an automatically-generated name will be used');
+$name->input()->setAttribute('placeholder', $page->defaultName());
 $form->addChild($name);
 
 $start = (new DateField('First day of comment period'))
