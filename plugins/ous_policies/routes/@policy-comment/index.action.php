@@ -27,7 +27,7 @@ foreach ($revisions as $revision) {
     if ($revision->moved() && $revision->fullName() != $revision->previousRevision()->fullName()) {
         echo '<br><small>Note: Policy was formerly named <strong>' . $revision->previousRevision()->fullName() . '</strong></small>';
     }
-    if ($revision->fullName() != $revision->policy()->fullName()) {
+    if ($revision->fullName() != $revision->policy()->name()) {
         echo '<br><small>Note: this policy is now named <strong>' . $revision->previousRevision()->fullName() . '</strong></small>';
     }
     if (!in_array($revision->state(), ['pending', 'comment'])) {
