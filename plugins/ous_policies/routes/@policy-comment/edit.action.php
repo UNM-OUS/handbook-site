@@ -2,6 +2,7 @@
 <?php
 
 use DigraphCMS\Context;
+use DigraphCMS\HTML\Forms\Field;
 use DigraphCMS\HTML\Forms\Fields\DateField;
 use DigraphCMS\HTML\Forms\FormWrapper;
 use DigraphCMS\HTTP\RedirectException;
@@ -13,6 +14,12 @@ use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
 $page = Context::page();
 
 $form = new FormWrapper('edit-' . Context::pageUUID());
+
+$name = (new Field('Custom name'))
+    ->setAttribute('placeholder', $page->defaultName())
+    ->setDefault($page['custom_name'])
+    ->addTip('Generally this can be left blank, and an automatically-generated name will be used');
+$form->addChild($name);
 
 $start = (new DateField('First day of comment period'))
     ->setDefault($page->firstDay())
@@ -35,8 +42,10 @@ $body = (new RichContentField('Page content', $page->uuid()))
     ->setRequired(true);
 $form->addChild($body);
 
-$form->addCallback(function () use ($page, $start, $end, $body) {
+$form->addCallback(function () use ($page, $name, $start, $end, $body) {
     $page->setFirstDay($start->value());
+    if ($name->value()) $page['custom_name'] = $name->value();
+    else unset($page['custom_name']);
     $page->setLastDay($end->value());
     $page->richContent('body', $body->value());
     $page->update();

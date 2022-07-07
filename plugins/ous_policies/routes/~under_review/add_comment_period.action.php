@@ -4,6 +4,7 @@
 use DigraphCMS\Content\Pages;
 use DigraphCMS\Context;
 use DigraphCMS\Digraph;
+use DigraphCMS\HTML\Forms\Field;
 use DigraphCMS\HTML\Forms\Fields\DateField;
 use DigraphCMS\HTML\Forms\FormWrapper;
 use DigraphCMS\HTTP\RedirectException;
@@ -35,13 +36,17 @@ if (Pages::exists(Context::arg('uuid'))) {
 
 $form = new FormWrapper('add-' . Context::arg('uuid'));
 
+$name = (new Field('Custom name'))
+    ->addTip('Generally this can be left blank, and an automatically-generated name will be used');
+$form->addChild($name);
+
 $start = (new DateField('First day of comment period'))
     ->setRequired(true);
 $form->addChild($start);
 
 $end = (new DateField('Last day of comment period'))
     ->setRequired(true);
-$end->addValidator(function()use($start,$end) {
+$end->addValidator(function () use ($start, $end) {
     if ($end->value() < $start->value()) {
         return "Last day cannot be before first day";
     }
@@ -54,9 +59,10 @@ $body = (new RichContentField('Page content', Context::arg('uuid')))
     ->setRequired(true);
 $form->addChild($body);
 
-$form->addCallback(function () use ($start, $end, $body) {
+$form->addCallback(function () use ($name, $start, $end, $body) {
     $page = new CommentPage();
     $page->setUUID(Context::arg('uuid'));
+    if ($name->value()) $page['custom_name'] = $name->value();
     $page->setFirstDay($start->value());
     $page->setLastDay($end->value());
     $page->richContent('body', $body->value());
