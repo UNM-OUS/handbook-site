@@ -5,6 +5,7 @@ namespace DigraphCMS_Plugins\unmous\ous_policies\Comment;
 use DateTime;
 use DigraphCMS\Content\Page;
 use DigraphCMS\DB\DB;
+use DigraphCMS\UI\Format;
 use DigraphCMS\URL\URL;
 use DigraphCMS\Users\User;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
@@ -140,7 +141,7 @@ class CommentPage extends Page
     {
         $this->name = sprintf(
             '%s: %s',
-            $this->firstDay()->format('Y-m-d'),
+            Format::date($this->firstDay(), true),
             $this['custom_name'] ?? $this->defaultName()
         );
     }
