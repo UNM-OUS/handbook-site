@@ -17,13 +17,13 @@ usermenu:
 theme:
   bundle_css: true
   bundle_js: true
-  head_cache_ttl: 86400
+  head_cache_ttl: -1
 errors:
   display_trace: false
 cache:
   ttl: 300
-  template_ttl: 86400
-  content_ttl: 3600
+  template_ttl: -1
+  content_ttl: 300
 files:
   ttl: 604800
   css:
