@@ -64,6 +64,16 @@ class CommentPage extends Page
         return parent::parent($url);
     }
 
+    /**
+     * Check/update name hourly, so that fuzzy dates get updated quickly
+     *
+     * @return void
+     */
+    public function cronJob_hourly()
+    {
+        if ($this->updateName()) $this->update();
+    }
+
     public function insert(?string $parent_uuid = null)
     {
         if (!$this['custom_name']) unset($this['custom_name']);
@@ -135,15 +145,17 @@ class CommentPage extends Page
      * Called by insert and update, to ensure that name reflects current
      * first day and policy number list
      *
-     * @return void
+     * @return bool whether it changed
      */
-    protected function updateName()
+    protected function updateName(): bool
     {
+        $oldName = $this->name;
         $this->name = sprintf(
             '%s: %s',
             Format::date($this->firstDay(), true),
             $this['custom_name'] ?? $this->defaultName()
         );
+        return $this->name != $oldName;
     }
 
     public function defaultName(): string
