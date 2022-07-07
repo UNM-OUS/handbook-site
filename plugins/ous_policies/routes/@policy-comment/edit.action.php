@@ -30,7 +30,7 @@ $end->addValidator(function () use ($start, $end) {
 });
 $form->addChild($end);
 
-$body = (new RichContentField('Page content', Context::arg('uuid')))
+$body = (new RichContentField('Page content', $page->uuid()))
     ->setDefault($page->richContent('body'))
     ->setRequired(true);
 $form->addChild($body);

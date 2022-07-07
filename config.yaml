@@ -25,7 +25,7 @@ cache:
   template_ttl: -1
   content_ttl: 300
 files:
-  ttl: 604800
+  ttl: -1
   css:
     minify: true
     sourcemap: false
