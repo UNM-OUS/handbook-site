@@ -27,11 +27,12 @@ foreach ($revisions as $revision) {
     if (!in_array($revision->state(), ['pending', 'comment'])) {
         echo ' (' . $revision->state()->label() . ')';
     }
-    if ($revision->moved() && $revision->fullName() != $revision->previousRevision()->fullName()) {
-        echo '<br><small>Note: Policy was formerly named <strong>' . $revision->previousRevision()->fullName() . '</strong></small>';
+    $previous = $revision->previousRevision();
+    if ($revision->moved() && $previous && $revision->fullName() != $previous->fullName()) {
+        echo '<br><small>Note: Policy was formerly named <strong>' . $previous->fullName() . '</strong></small>';
     }
     if ($revision->fullName() != $revision->policy()->name()) {
-        echo '<br><small>Note: this policy is now named <strong>' . $revision->previousRevision()->fullName() . '</strong></small>';
+        echo '<br><small>Note: this policy is now named <strong>' . $previous->fullName() . '</strong></small>';
     }
     echo "</li>";
 }
