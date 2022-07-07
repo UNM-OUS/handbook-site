@@ -12,7 +12,7 @@ $page = Context::page();
 echo $page->richContent('body');
 
 $revisions = $page->revisions();
-if (!$revisions) return;
+if (!$revisions->count()) return;
 
 echo "<h2>Proposed changes</h2>";
 echo "<ul>";
