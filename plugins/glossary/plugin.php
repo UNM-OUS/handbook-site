@@ -128,6 +128,11 @@ class Glossary extends AbstractPlugin
         } elseif ($element instanceof DOMElement) {
             // allow data-no-glossary attribute to skip glossary searching in an element
             if ($element->getAttribute('data-no-glossary')) return;
+            // don't search inside some elements
+            if (in_array($element->tagName, ['a', 'select', 'pre', 'textarea', 'form', 'code', 'input'])) return;
+            // don't search in some classes
+            $classes = explode(' ', $element->getAttribute('class') ?? '');
+            if (array_intersect($classes, ['form-wrapper', 'form-field', 'menubar', 'notification'])) return;
             // reset matches on some elements
             if (in_array($element->tagName, ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])) $matched = [];
         }
