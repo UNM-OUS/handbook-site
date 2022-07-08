@@ -89,10 +89,9 @@ class GlossaryTerm
      * Add a pattern, overwriting if it already exists
      *
      * @param string $pattern
-     * @param boolean $regex
      * @return $this
      */
-    public function addPattern(string $pattern, bool $regex)
+    public function addPattern(string $pattern)
     {
         DB::beginTransaction();
         static::deletePattern($pattern);
@@ -100,8 +99,7 @@ class GlossaryTerm
             'glossary_pattern',
             [
                 'glossary_term_uuid' => $this->uuid(),
-                'pattern' => $pattern,
-                'regex' => $regex
+                'pattern' => $pattern
             ]
         )->execute();
         DB::commit();

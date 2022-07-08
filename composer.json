@@ -8,7 +8,8 @@
         "digraphcms/digraph-core": "^2",
         "unmous/ous_digraph_module": "^2",
         "caxy/php-htmldiff": "^0.1.10",
-        "dompdf/dompdf": "^1.2"
+        "dompdf/dompdf": "^1.2",
+        "s9e/regexp-builder": "^1.4"
     },
     "repositories": [{
         "type": "vcs",

@@ -11,6 +11,7 @@ use DOMElement;
 use DOMNode;
 use DOMText;
 use Masterminds\HTML5;
+use s9e\RegexpBuilder\Builder;
 
 class Glossary extends AbstractPlugin
 {
@@ -70,6 +71,12 @@ class Glossary extends AbstractPlugin
         );
     }
 
+    /**
+     * Retrieve the first term matching a given string
+     *
+     * @param string $term
+     * @return GlossaryTerm|null
+     */
     protected static function firstMatch(string $term): ?GlossaryTerm
     {
         foreach (static::allPatterns() as list($pattern, $termID)) {
@@ -78,14 +85,28 @@ class Glossary extends AbstractPlugin
         return null;
     }
 
+    /**
+     * Generate a shorter regex pattern that matches any of the given patterns
+     *
+     * @return string
+     */
     protected static function completeRegexPattern(): string
     {
-        return '/\b(' . implode('|', array_map(
-            function ($e) {
-                return $e[0];
+        return Cache::get(
+            'glossary/pattern',
+            function () {
+                $builder = new Builder();
+                $pattern = $builder->build(array_map(
+                    function ($e) {
+                        return strtolower($e[0]);
+                    },
+                    static::allPatterns()
+                ));
+                $pattern = "/\\b$pattern\\b/i";
+                return $pattern;
             },
-            static::allPatterns()
-        )) . ')\b/i';
+            3600
+        );
     }
 
     protected static function allPatterns(): array
@@ -95,10 +116,8 @@ class Glossary extends AbstractPlugin
             function () {
                 $patterns = array_map(
                     function ($row) {
-                        if ($row['regex']) $pattern = $row['pattern'];
-                        else $pattern = preg_quote($row['pattern']);
                         return [
-                            $pattern,
+                            $row['pattern'],
                             $row['glossary_term_uuid']
                         ];
                     },

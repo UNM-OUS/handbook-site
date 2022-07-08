@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7c9c0ce70c63457223e21c007209c7f6",
+    "content-hash": "4141d6fbfae6c968dfe87f9cc2054dd5",
     "packages": [
         {
             "name": "byjoby/flatrr",
@@ -346,12 +346,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/digraph-cms/digraph-core.git",
-                "reference": "60a0cce2750190f728d8a8ce1e72009644386b0c"
+                "reference": "837a38f797b738b2368b9d9b090ab4e3029cc171"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/60a0cce2750190f728d8a8ce1e72009644386b0c",
-                "reference": "60a0cce2750190f728d8a8ce1e72009644386b0c",
+                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/837a38f797b738b2368b9d9b090ab4e3029cc171",
+                "reference": "837a38f797b738b2368b9d9b090ab4e3029cc171",
                 "shasum": ""
             },
             "require": {
@@ -423,7 +423,7 @@
                 "issues": "https://github.com/digraph-cms/digraph-core/issues",
                 "source": "https://github.com/digraph-cms/digraph-core/tree/v2"
             },
-            "time": "2022-07-08T17:03:07+00:00"
+            "time": "2022-07-08T17:19:44+00:00"
         },
         {
             "name": "dompdf/dompdf",
@@ -2599,6 +2599,48 @@
                 "source": "https://github.com/cakephp/phinx/tree/0.12.11"
             },
             "time": "2022-07-03T16:41:43+00:00"
+        },
+        {
+            "name": "s9e/regexp-builder",
+            "version": "1.4.6",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/s9e/RegexpBuilder.git",
+                "reference": "3a646bc7c40dba41903b7065f32230721e00df3a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/s9e/RegexpBuilder/zipball/3a646bc7c40dba41903b7065f32230721e00df3a",
+                "reference": "3a646bc7c40dba41903b7065f32230721e00df3a",
+                "shasum": ""
+            },
+            "require": {
+                "lib-pcre": ">=7.2",
+                "php": ">=7.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": ">=9.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "s9e\\RegexpBuilder\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Single-purpose library that generates regular expressions that match a list of strings.",
+            "homepage": "https://github.com/s9e/RegexpBuilder/",
+            "keywords": [
+                "regexp"
+            ],
+            "support": {
+                "issues": "https://github.com/s9e/RegexpBuilder/issues",
+                "source": "https://github.com/s9e/RegexpBuilder/tree/1.4.6"
+            },
+            "time": "2022-03-05T16:22:35+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

@@ -23,18 +23,11 @@ $table = new QueryTable(
         $addPatternForm = new FormWrapper('add_term_' . $term->uuid());
         $pattern = new INPUT('pattern');
         $pattern->setRequired(true);
-        $pattern->setAttribute('placeholder', 'add pattern - wrap in slashes like /pattern/ to enable regex');
         $addPatternForm->addChild($pattern);
         $addPatternForm->addClass('inline-autoform');
         $addPatternForm->setData('target', '_frame');
         $addPatternForm->addCallback(function () use ($pattern, $term) {
-            $pattern = $pattern->value();
-            $regex = false;
-            if (preg_match('/^\/.*\/$/', $pattern)) {
-                $regex = true;
-                $pattern = substr($pattern, 1, strlen($pattern) - 2);
-            }
-            $term->addPattern($pattern, $regex);
+            $term->addPattern($pattern->value(), $regex);
             throw new RefreshException();
         });
         return [
@@ -70,9 +63,7 @@ $table = new QueryTable(
                                 null,
                                 'delete_' . $term->uuid() . '_' . md5($p['pattern'])
                             ))->setData('target', '_frame'),
-                            $p['regex']
-                                ? '/' . $p['pattern'] . '/'
-                                : $p['pattern']
+                            $p['pattern']
                         );
                     },
                     $term->patterns()->fetchAll()

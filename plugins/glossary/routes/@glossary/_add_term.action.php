@@ -46,8 +46,7 @@ if ($form->ready()) {
             'glossary_pattern',
             [
                 'glossary_term_uuid' => $uuid,
-                'pattern' => strtolower($name->value()),
-                'regex' => false
+                'pattern' => strtolower($name->value())
             ]
         )->execute();
         DB::commit();
