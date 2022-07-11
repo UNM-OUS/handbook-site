@@ -1,6 +1,6 @@
 <?php
 /**
- * This file is the production entry point, and is designed to be faster
+ * This file will only work if run through PHP's CLI server
  */
 
 use DigraphCMS\Cache\CachedInitializer;
@@ -12,12 +12,20 @@ if (is_file(__DIR__ . '/../.maintenance')) {
     exit();
 }
 
+// die if not using PHP server
+if (php_sapi_name() !== 'cli-server') exit();
+
 // load autoloader after maintenance check
 require_once __DIR__ . "/../vendor/autoload.php";
 
-// configure initialization cache to have indefinite ttl
-// this works on staging/production where cache is cleared on deploy
-CachedInitializer::configureCache(__DIR__ . '/../cache', -1);
+// special cases for running in PHP's built-in server
+$r = @reset(explode('?', $_SERVER['REQUEST_URI'], 2));
+if ($r == '/favicon.ico' || substr($r, 0, 7) == '/files/') {
+    return false;
+}
+
+// expiring initialization cache for development
+CachedInitializer::configureCache(__DIR__ . '/../cache', 60);
 
 // load initialization
 require_once __DIR__ . '/../initialize.php';

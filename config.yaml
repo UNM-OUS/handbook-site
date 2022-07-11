@@ -21,9 +21,9 @@ theme:
 errors:
   display_trace: false
 cache:
-  ttl: 300
+  ttl: 600
   template_ttl: -1
-  content_ttl: 300
+  content_ttl: 60
 files:
   ttl: -1
   css:

@@ -6,6 +6,8 @@ use DigraphCMS\URL\URL;
 use DigraphCMS\URL\URLs;
 use DigraphCMS\URL\WaybackMachine;
 
+if (file_exists(__DIR__.'/../.maintenance')) exit();
+
 // get site name
 $siteName = basename(realpath(__DIR__ . '/../..'));
 $backupDir = '/home/handbook/public_html/_backup';
