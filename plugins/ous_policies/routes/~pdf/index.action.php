@@ -9,12 +9,14 @@
 use DigraphCMS\Context;
 use DigraphCMS\DB\DB;
 use DigraphCMS\Media\DeferredFile;
+use DigraphCMS\UI\Breadcrumb;
 use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Notifications;
 
 Context::response()->setSearchIndex(!Context::url()->query());
 Context::fields()['template-sidebar'] = true;
+Breadcrumb::setTopName('PDF downloads');
 
 // recent PDFs
 $query = DB::query()->from('generated_policy_pdf')
