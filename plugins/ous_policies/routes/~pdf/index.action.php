@@ -12,6 +12,7 @@ use DigraphCMS\Media\DeferredFile;
 use DigraphCMS\UI\Breadcrumb;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Notifications;
+use DigraphCMS\UI\Pagination\PaginatedList;
 use DigraphCMS\UI\Pagination\PaginatedTable;
 
 Context::response()->setSearchIndex(!Context::url()->query());
@@ -25,17 +26,18 @@ $query = DB::query()->from('generated_policy_pdf')
     ->where('date_day = ?', [date('j')])
     ->order('filename asc');
 
-$table = new PaginatedTable(
+$table = new PaginatedList(
     $query,
-    function (array $row): array {
+    function (array $row) {
         $file = new DeferredFile($row['filename'], function (DeferredFile $file) use ($row) {
             file_put_contents($file->path(), gzdecode($row['data']));
         }, $row['uuid']);
-        return [
-            sprintf('<a href="%s">%s</a>', $file->url(), $file->filename())
-        ];
-    },
-    []
+        return sprintf(
+            '<a href="%s">%s</a>',
+            $file->url(),
+            preg_replace('/ - [0-9]{4}-[0-9]{2}-[0-9]{2}\.pdf$/', '', $file->filename())
+        );
+    }
 );
 if (!$query->count()) {
     Notifications::printWarning('Today\'s PDFs have not been generated yet. Please check back later.');
@@ -61,10 +63,13 @@ $table = new PaginatedTable(
         }, $row['uuid']);
         return [
             Format::date($row['created']),
-            sprintf('<a href="%s">%s</a>', $file->url(), $file->filename())
+            sprintf(
+                '<a href="%s">%s</a>',
+                $file->url(),
+                preg_replace('/ - [0-9]{4}-[0-9]{2}-[0-9]{2}\.pdf$/', '', $file->filename())
+            )
         ];
-    },
-    []
+    }
 );
 echo "<h2>Archived copies</h2>";
 echo '<p>PDFs are periodically automatically archived, and all archived copies can be browsed here.</p>';
