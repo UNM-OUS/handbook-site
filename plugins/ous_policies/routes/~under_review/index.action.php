@@ -1,9 +1,9 @@
 <?php
 
 use DigraphCMS\Context;
-use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Notifications;
+use DigraphCMS\UI\Pagination\PaginatedTable;
 use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
 use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPeriods;
 
@@ -32,7 +32,7 @@ $current = CommentPeriods::current();
 if (!$current->count()) {
     Notifications::printNotice('No comment periods are currently open');
 } else {
-    $table = new QueryTable(
+    $table = new PaginatedTable(
         $current,
         function (CommentPage $page) {
             return [$page->url()->html()];
@@ -48,7 +48,7 @@ if (!$past->count()) return;
 
 echo "<h2>Past comment periods</h2>";
 
-$table = new QueryTable(
+$table = new PaginatedTable(
     $past,
     function (CommentPage $page) {
         return [$page->url()->html()];

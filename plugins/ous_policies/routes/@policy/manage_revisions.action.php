@@ -2,10 +2,10 @@
 <?php
 
 use DigraphCMS\Context;
-use DigraphCMS\UI\DataTables\ColumnHeader;
-use DigraphCMS\UI\DataTables\QueryColumnHeader;
-use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
+use DigraphCMS\UI\Pagination\ColumnHeader;
+use DigraphCMS\UI\Pagination\ColumnSortingHeader;
+use DigraphCMS\UI\Pagination\PaginatedTable;
 use DigraphCMS\UI\Toolbars\ToolbarLink;
 use DigraphCMS\URL\URL;
 use DigraphCMS_Plugins\unmous\ous_policies\PolicyPage;
@@ -28,7 +28,7 @@ $drafts = Revisions::select($policy->uuid())
     ->order('updated DESC');
 if ($drafts->count()) {
     echo "<h2>Unpublished</h2>";
-    echo new QueryTable(
+    echo new PaginatedTable(
         $drafts,
         function (PolicyRevision $revision): array {
             return [
@@ -52,9 +52,9 @@ if ($drafts->count()) {
         },
         [
             new ColumnHeader(''),
-            new QueryColumnHeader('Effective', 'effective', $drafts),
+            new ColumnSortingHeader('Effective', 'effective', $drafts),
             new ColumnHeader('Type'),
-            new QueryColumnHeader('Modified', 'updated', $drafts),
+            new ColumnSortingHeader('Modified', 'updated', $drafts),
             new ColumnHeader(''),
             new ColumnHeader(''),
         ]
@@ -65,7 +65,7 @@ if ($drafts->count()) {
 $revisions = Revisions::select($policy->uuid())
     ->where('state <> "draft"')
     ->order('(CASE WHEN effective IS NULL THEN 1 ELSE 2 END), effective DESC, created DESC');
-echo new QueryTable(
+echo new PaginatedTable(
     $revisions,
     function (PolicyRevision $revision): array {
         return [
@@ -84,12 +84,12 @@ echo new QueryTable(
     },
     [
         new ColumnHeader(''),
-        new QueryColumnHeader('Effective', 'effective', $revisions),
+        new ColumnSortingHeader('Effective', 'effective', $revisions),
         new ColumnHeader('Type'),
         new ColumnHeader('State'),
-        new QueryColumnHeader('Created', 'created', $revisions),
+        new ColumnSortingHeader('Created', 'created', $revisions),
         new ColumnHeader(''),
-        new QueryColumnHeader('Modified', 'updated', $revisions),
+        new ColumnSortingHeader('Modified', 'updated', $revisions),
         new ColumnHeader('')
     ]
 );

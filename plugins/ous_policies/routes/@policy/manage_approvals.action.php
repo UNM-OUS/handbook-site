@@ -2,9 +2,9 @@
 <?php
 
 use DigraphCMS\Context;
-use DigraphCMS\UI\DataTables\ColumnHeader;
-use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
+use DigraphCMS\UI\Pagination\ColumnHeader;
+use DigraphCMS\UI\Pagination\PaginatedTable;
 use DigraphCMS\UI\Toolbars\ToolbarLink;
 use DigraphCMS\URL\URL;
 use DigraphCMS_Plugins\unmous\ous_policies\Approvals\Approvals;
@@ -15,7 +15,7 @@ use DigraphCMS_Plugins\unmous\ous_policies\Revisions\Revisions;
 $revisions = Revisions::select(Context::pageUUID())
     ->order('effective DESC');
 
-$table = new QueryTable(
+$table = new PaginatedTable(
     $revisions,
     function (PolicyRevision $revision): array {
         $query = Approvals::select($revision->uuid());
@@ -28,7 +28,7 @@ $table = new QueryTable(
                 $revision->title()
             ),
             Format::date($revision->effective()),
-            new QueryTable(
+            new PaginatedTable(
                 $query,
                 function (RevisionApproval $approval): array {
                     return [

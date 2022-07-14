@@ -36,6 +36,7 @@ class CommentPage extends Page
     public function permissions(URL $url, ?User $user = null): ?bool
     {
         if ($url->action() == 'copy') return false;
+        elseif ($url->action() == 'finalize_revisions') return $this->isOver() && parent::permissions($url, $user);
         else return parent::permissions($url, $user);
     }
 

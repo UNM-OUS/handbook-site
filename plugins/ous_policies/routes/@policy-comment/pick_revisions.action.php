@@ -2,9 +2,9 @@
 
 use DigraphCMS\Context;
 use DigraphCMS\HTML\Forms\FormWrapper;
-use DigraphCMS\UI\DataTables\QueryColumnHeader;
-use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
+use DigraphCMS\UI\Pagination\ColumnSortingHeader;
+use DigraphCMS\UI\Pagination\PaginatedTable;
 use DigraphCMS\UI\Toolbars\ToolbarLink;
 use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
 use DigraphCMS_Plugins\unmous\ous_policies\Fields\PolicyAutocompleteInput;
@@ -31,7 +31,7 @@ $page = Context::page();
     <?php
     echo "<h2>Selected revisions</h2>";
     $revisions = $page->revisions();
-    $table = new QueryTable(
+    $table = new PaginatedTable(
         $revisions,
         function (PolicyRevision $revision) use ($page): array {
             return [
@@ -70,7 +70,7 @@ $page = Context::page();
         $recentRevisions->where('page_uuid = ?', [$policy->value()]);
     }
 
-    $table = new QueryTable(
+    $table = new PaginatedTable(
         $recentRevisions,
         function (PolicyRevision $revision) use ($page): array {
             return [
@@ -87,7 +87,7 @@ $page = Context::page();
         [
             'Policy',
             'Revision',
-            new QueryColumnHeader('Date', 'effective', $recentRevisions),
+            new ColumnSortingHeader('Date', 'effective', $recentRevisions),
             ''
         ]
     );

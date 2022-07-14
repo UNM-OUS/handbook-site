@@ -10,9 +10,9 @@ use DigraphCMS\Context;
 use DigraphCMS\DB\DB;
 use DigraphCMS\Media\DeferredFile;
 use DigraphCMS\UI\Breadcrumb;
-use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Notifications;
+use DigraphCMS\UI\Pagination\PaginatedTable;
 
 Context::response()->setSearchIndex(!Context::url()->query());
 Context::fields()['template-sidebar'] = true;
@@ -25,7 +25,7 @@ $query = DB::query()->from('generated_policy_pdf')
     ->where('date_day = ?', [date('j')])
     ->order('filename asc');
 
-$table = new QueryTable(
+$table = new PaginatedTable(
     $query,
     function (array $row): array {
         $file = new DeferredFile($row['filename'], function (DeferredFile $file) use ($row) {
@@ -53,7 +53,7 @@ $query = DB::query()->from('generated_policy_pdf')
     ->order('date_year desc, date_month desc, date_day desc, filename asc');
 if (!$query->count()) return;
 
-$table = new QueryTable(
+$table = new PaginatedTable(
     $query,
     function (array $row): array {
         $file = new DeferredFile($row['filename'], function (DeferredFile $file) use ($row) {

@@ -5,8 +5,8 @@ use DigraphCMS\Context;
 use DigraphCMS\HTML\Forms\FormWrapper;
 use DigraphCMS\HTML\Forms\INPUT;
 use DigraphCMS\HTTP\RefreshException;
-use DigraphCMS\UI\DataTables\QueryColumnHeader;
-use DigraphCMS\UI\DataTables\QueryTable;
+use DigraphCMS\UI\Pagination\ColumnSortingHeader;
+use DigraphCMS\UI\Pagination\PaginatedTable;
 use DigraphCMS\UI\Toolbars\ToolbarLink;
 use DigraphCMS\URL\URL;
 use DigraphCMS_Plugins\byjoby\glossary\Glossary;
@@ -17,7 +17,7 @@ echo "<div id='manage-glossary-terms' class='navigation-frame navigation-frame--
 $terms = Glossary::selectTerms()
     ->where('page_uuid = ?', [Context::pageUUID()])
     ->order('name ASC');
-$table = new QueryTable(
+$table = new PaginatedTable(
     $terms,
     function (GlossaryTerm $term): array {
         $addPatternForm = new FormWrapper('add_term_' . $term->uuid());
@@ -74,7 +74,7 @@ $table = new QueryTable(
     },
     [
         '',
-        new QueryColumnHeader('Term', 'name', $terms),
+        new ColumnSortingHeader('Term', 'name', $terms),
         'Patterns'
     ]
 );

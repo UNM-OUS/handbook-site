@@ -8,13 +8,13 @@ use DigraphCMS\HTML\Forms\Fields\CheckboxField;
 use DigraphCMS\HTML\Forms\FormWrapper;
 use DigraphCMS\HTTP\HttpError;
 use DigraphCMS\HTTP\RedirectException;
+use DigraphCMS\Spreadsheets\CellWriters\DateCell;
+use DigraphCMS\Spreadsheets\CellWriters\LinkCell;
 use DigraphCMS\UI\Breadcrumb;
-use DigraphCMS\UI\DataTables\CellWriters\DateCell;
-use DigraphCMS\UI\DataTables\CellWriters\LinkCell;
-use DigraphCMS\UI\DataTables\ColumnHeader;
-use DigraphCMS\UI\DataTables\QueryColumnHeader;
-use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
+use DigraphCMS\UI\Pagination\ColumnHeader;
+use DigraphCMS\UI\Pagination\ColumnSortingHeader;
+use DigraphCMS\UI\Pagination\PaginatedTable;
 use DigraphCMS\URL\URL;
 use DigraphCMS_Plugins\unmous\ous_policies\Fields\PolicyAutocompleteInput;
 use DigraphCMS_Plugins\unmous\ous_policies\PolicyPage;
@@ -85,7 +85,7 @@ if (Context::arg('only_policy')) {
     $revisions->where('page_uuid = ?', [Context::arg('only_policy')]);
 }
 
-$table = new QueryTable(
+$table = new PaginatedTable(
     $revisions,
     function (PolicyRevision $revision): array {
         return [
@@ -103,13 +103,13 @@ $table = new QueryTable(
         ];
     },
     [
-        new QueryColumnHeader('Policy', 'num', $revisions),
+        new ColumnSortingHeader('Policy', 'num', $revisions),
         new ColumnHeader('Revision information'),
-        new QueryColumnHeader('Effective', 'effective', $revisions)
+        new ColumnSortingHeader('Effective', 'effective', $revisions)
     ]
 );
 
-$table->enableDownload(
+$table->download(
     preg_replace('/[^a-z0-9\-\_ ]/i', '_', 'FHB revisions' . $filenameSuffix . ' - ' . date('Y-m-d')),
     function (PolicyRevision $revision): array {
         return [

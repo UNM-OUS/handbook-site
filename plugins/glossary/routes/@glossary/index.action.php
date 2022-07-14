@@ -4,7 +4,7 @@ use DigraphCMS\Context;
 use DigraphCMS\HTML\Forms\FormWrapper;
 use DigraphCMS\HTML\Forms\INPUT;
 use DigraphCMS\UI\Breadcrumb;
-use DigraphCMS\UI\DataTables\QueryTable;
+use DigraphCMS\UI\Pagination\PaginatedTable;
 use DigraphCMS_Plugins\byjoby\glossary\Glossary;
 use DigraphCMS_Plugins\byjoby\glossary\GlossaryPage;
 use DigraphCMS_Plugins\byjoby\glossary\GlossaryTerm;
@@ -51,7 +51,7 @@ if ($q->value()) {
     }
 }
 
-$table = new QueryTable(
+$table = new PaginatedTable(
     $terms,
     function (GlossaryTerm $term): array {
         return [

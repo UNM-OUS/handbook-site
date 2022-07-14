@@ -1,10 +1,10 @@
 <?php
 
 use DigraphCMS\Context;
-use DigraphCMS\UI\DataTables\ColumnHeader;
-use DigraphCMS\UI\DataTables\QueryColumnHeader;
-use DigraphCMS\UI\DataTables\QueryTable;
 use DigraphCMS\UI\Format;
+use DigraphCMS\UI\Pagination\ColumnHeader;
+use DigraphCMS\UI\Pagination\ColumnSortingHeader;
+use DigraphCMS\UI\Pagination\PaginatedTable;
 use DigraphCMS_Plugins\unmous\ous_policies\Approvals\Approvals;
 use DigraphCMS_Plugins\unmous\ous_policies\Approvals\RevisionApproval;
 use DigraphCMS_Plugins\unmous\ous_policies\Revisions\PolicyRevision;
@@ -19,7 +19,7 @@ $query = Revisions::select(Context::pageUUID())
     ->where('effective IS NOT NULL')
     ->order('effective DESC, created DESC');
 
-echo new QueryTable(
+echo new PaginatedTable(
     $query,
     function (PolicyRevision $revision): array {
         return [
@@ -40,7 +40,7 @@ echo new QueryTable(
     },
     [
         new ColumnHeader('Revision'),
-        new QueryColumnHeader('Date', 'effective', $query),
+        new ColumnSortingHeader('Date', 'effective', $query),
         new ColumnHeader('Approved by'),
         new ColumnHeader('Status')
     ]
