@@ -3,6 +3,7 @@
 use DigraphCMS\Context;
 use DigraphCMS\UI\Format;
 use DigraphCMS\UI\Notifications;
+use DigraphCMS\UI\Sidebar\Sidebar;
 use DigraphCMS\URL\URL;
 use DigraphCMS_Plugins\unmous\ous_policies\Comment\CommentPage;
 use DigraphCMS_Plugins\unmous\ous_policies\PolicyPage;
@@ -32,24 +33,26 @@ if ($comment) {
 
 echo $page->richContent('body');
 
-if ($page->revisions()->count() > 1) {
+Sidebar::addBottom(function () {
     /** @var PolicyRevision */
-    $earliest = $page->revisions()
+    $earliest = Context::page()->revisions()
         ->where('effective is not null')
         ->order('effective asc')
         ->limit(1)
         ->fetch();
-    echo '<div class="card card--info">';
-    echo '<h2>Revision history</h2>';
-    printf(
-        '<p>The revision history of this policy as far back as %s is available online through our self-service portal. Locating older revisions would require a manual search of historical records. For more information you may also visit %s.</p>',
+    $out = '<div class="card card--info">';
+    $out .= '<h1 style="margin-top:0;">Revision history</h1>';
+    $out .= sprintf(
+        '<p>The revision history of %s as far back as %s is available online through our self-service portal. Locating older revisions would require a manual search of historical records. For more information you may also visit %s.</p>',
+        Context::page()->name(),
         Format::date($earliest->effective()),
         (new URL('/locating_old_versions/'))->html()
     );
-    printf(
+    $out .= sprintf(
         '<a href="%s">%s</a>',
-        $page->url('_revision_history'),
-        'Revision history of ' . $page->name()
+        Context::page()->url('_revision_history'),
+        'Revision history of ' . Context::page()->name()
     );
-    echo '</div>';
-}
+    $out .= '</div>';
+    return $out;
+});

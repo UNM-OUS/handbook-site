@@ -13,6 +13,10 @@ unm:
 usermenu:
   guest_signin: false
 
+# enable sidebar
+sidebar:
+  default_state: true
+
 # Generally should be fine for most sites
 theme:
   bundle_css: true

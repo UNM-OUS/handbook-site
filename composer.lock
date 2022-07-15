@@ -346,12 +346,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/digraph-cms/digraph-core.git",
-                "reference": "7e8ef4c8d031dc4ecb93eed0cde9051ca7cb1802"
+                "reference": "a9723750c30f3bf0f0ba02d37e5a1078e5995183"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/7e8ef4c8d031dc4ecb93eed0cde9051ca7cb1802",
-                "reference": "7e8ef4c8d031dc4ecb93eed0cde9051ca7cb1802",
+                "url": "https://api.github.com/repos/digraph-cms/digraph-core/zipball/a9723750c30f3bf0f0ba02d37e5a1078e5995183",
+                "reference": "a9723750c30f3bf0f0ba02d37e5a1078e5995183",
                 "shasum": ""
             },
             "require": {
@@ -423,7 +423,7 @@
                 "issues": "https://github.com/digraph-cms/digraph-core/issues",
                 "source": "https://github.com/digraph-cms/digraph-core/tree/v2"
             },
-            "time": "2022-07-14T16:36:30+00:00"
+            "time": "2022-07-15T19:09:48+00:00"
         },
         {
             "name": "dompdf/dompdf",
@@ -2516,16 +2516,16 @@
         },
         {
             "name": "robmorgan/phinx",
-            "version": "0.12.11",
+            "version": "0.12.12",
             "source": {
                 "type": "git",
                 "url": "https://github.com/cakephp/phinx.git",
-                "reference": "2046c447b1a4425956555118200138e22ebd680c"
+                "reference": "9a6ce1e7fdf0fa4e602ba5875b5bc9442ccaa115"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/cakephp/phinx/zipball/2046c447b1a4425956555118200138e22ebd680c",
-                "reference": "2046c447b1a4425956555118200138e22ebd680c",
+                "url": "https://api.github.com/repos/cakephp/phinx/zipball/9a6ce1e7fdf0fa4e602ba5875b5bc9442ccaa115",
+                "reference": "9a6ce1e7fdf0fa4e602ba5875b5bc9442ccaa115",
                 "shasum": ""
             },
             "require": {
@@ -2596,9 +2596,9 @@
             ],
             "support": {
                 "issues": "https://github.com/cakephp/phinx/issues",
-                "source": "https://github.com/cakephp/phinx/tree/0.12.11"
+                "source": "https://github.com/cakephp/phinx/tree/0.12.12"
             },
-            "time": "2022-07-03T16:41:43+00:00"
+            "time": "2022-07-09T18:53:51+00:00"
         },
         {
             "name": "s9e/regexp-builder",
@@ -4404,12 +4404,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/UNM-OUS/ous_digraph_module.git",
-                "reference": "42a4f13856c680b9776be7d8753b3b6f884dd72b"
+                "reference": "e2d1d953365c07192e1be80f3c594cdd08b832bd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/UNM-OUS/ous_digraph_module/zipball/42a4f13856c680b9776be7d8753b3b6f884dd72b",
-                "reference": "42a4f13856c680b9776be7d8753b3b6f884dd72b",
+                "url": "https://api.github.com/repos/UNM-OUS/ous_digraph_module/zipball/e2d1d953365c07192e1be80f3c594cdd08b832bd",
+                "reference": "e2d1d953365c07192e1be80f3c594cdd08b832bd",
                 "shasum": ""
             },
             "require": {
@@ -4428,7 +4428,7 @@
                 "source": "https://github.com/UNM-OUS/ous_digraph_module/tree/v2",
                 "issues": "https://github.com/UNM-OUS/ous_digraph_module/issues"
             },
-            "time": "2022-07-12T19:07:54+00:00"
+            "time": "2022-07-15T14:21:22+00:00"
         }
     ],
     "packages-dev": [],

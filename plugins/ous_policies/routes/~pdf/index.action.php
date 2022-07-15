@@ -16,7 +16,6 @@ use DigraphCMS\UI\Pagination\PaginatedList;
 use DigraphCMS\UI\Pagination\PaginatedTable;
 
 Context::response()->setSearchIndex(!Context::url()->query());
-Context::fields()['template-sidebar'] = true;
 Breadcrumb::setTopName('PDF downloads');
 
 // recent PDFs
