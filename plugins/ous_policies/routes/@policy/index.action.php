@@ -34,6 +34,7 @@ if ($comment) {
 echo $page->richContent('body');
 
 Sidebar::addBottom(function () {
+    if (Context::page()->revisions()->count() < 2) return '';
     /** @var PolicyRevision */
     $earliest = Context::page()->revisions()
         ->where('effective is not null')
